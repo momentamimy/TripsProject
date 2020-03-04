@@ -1,4 +1,4 @@
-package com.example.tripsproject;
+package com.ProjectITI.tripsproject;
 
 import android.content.Context;
 

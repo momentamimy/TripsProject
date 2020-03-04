@@ -1,4 +1,4 @@
-package com.example.tripsproject;
+package com.ProjectITI.tripsproject;
 
 import org.junit.Test;
 
