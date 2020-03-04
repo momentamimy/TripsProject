@@ -17,8 +17,7 @@
             android:id="@+id/input_layout_UserName"
             android:theme="@style/TextPrimaryLabel"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp">
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/UserName"
@@ -39,8 +38,7 @@
             android:layout_below="@+id/input_layout_UserName"
             android:theme="@style/TextPrimaryLabel"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp">
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/Email"
@@ -62,8 +60,6 @@
             android:theme="@style/TextPrimaryLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp"
             android:layout_below="@+id/input_layout_Email"
             app:passwordToggleEnabled="true"
             app:passwordToggleTint="@color/colorPrimary"
@@ -90,8 +86,6 @@
             android:theme="@style/TextPrimaryLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp"
             android:layout_below="@+id/input_layout_Password"
             app:passwordToggleEnabled="true"
             app:passwordToggleTint="@color/colorPrimary"
@@ -116,7 +110,7 @@
     </RelativeLayout>
 
     <Button
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="15dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/Login_Layout"
         android:id="@+id/SignUp"
@@ -130,7 +124,7 @@
         android:background="@drawable/glory_button"/>
 
     <Button
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="15dp"
         android:layout_centerHorizontal="true"
         android:id="@+id/LoginActivity"
         android:layout_below="@+id/SignUp"

@@ -128,4 +128,9 @@ public class LoginSignup_Activity extends AppCompatActivity implements LoginFrag
         super.onSaveInstanceState(outState);
         outState.putBoolean("BoolSignUp",SignUp);
     }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 }

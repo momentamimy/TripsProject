@@ -43,7 +43,7 @@ public class LoginPresenter implements LoginContract.PresenterInterface{
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists())
                             {
-                                viewInterface.LoginSucceed(email,dataSnapshot.getValue(String.class),pass);
+                                viewInterface.LoginSucceed(email,pass,dataSnapshot.getValue(String.class));
                             }
                         }
                         @Override
