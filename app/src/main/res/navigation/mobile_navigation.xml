@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_upcomping_trips">
+
+    <fragment
+        android:id="@+id/nav_upcomping_trips"
+        android:name="com.ProjectITI.tripsproject.ui.Upcoming_Trips.HomeFragment"
+        android:label="@string/menu_history"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_upcoming"
+        android:name="com.ProjectITI.tripsproject.ui.Trips_History.GalleryFragment"
+        android:label="@string/menu_upcoming"
+        tools:layout="@layout/fragment_TripsHistory" />
+
+    <fragment
+        android:id="@+id/nav_slideshow"
+        android:name="com.example.tripsproject.ui.slideshow.SlideshowFragment"
+        android:label="@string/menu_slideshow"
+        tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/nav_tools"
+        android:name="com.example.tripsproject.ui.tools.ToolsFragment"
+        android:label="@string/menu_tools"
+        tools:layout="@layout/fragment_tools" />
+
+    <fragment
+        android:id="@+id/nav_logout"
+        android:name="com.ProjectITI.tripsproject.ui.share.ShareFragment"
+        android:label="@string/menu_logout"
+        tools:layout="@layout/fragment_share" />
+
+    <fragment
+        android:id="@+id/nav_sync"
+        android:name="com.ProjectITI.tripsproject.ui.send.SendFragment"
+        android:label="@string/menu_sync"
+        tools:layout="@layout/fragment_send" />
+</navigation>

@@ -1,5 +1,26 @@
 <resources>
     <string name="app_name">Trips Project</string>
+    <string name="title_activity_home_screen">HomeScreen</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_history">Upcoming Trips</string>
+    <string name="menu_upcoming">Trips History</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_tools">Tools</string>
+    <string name="menu_logout">Logout</string>
+    <string name="menu_sync">Sync</string>
+    <string name="Start">Start Trip</string>
+    <string name="Date">"Date : "</string>
+    <string name="Time">Time :</string>
+    <string name="From">From :</string>
+    <string name="To">To :</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="Trip_Name">Trip Name</string>
     <string name="Start_Point">Start Point</string>
     <string name="End_Point">End Point</string>

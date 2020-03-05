@@ -1,0 +1,145 @@
+package com.ProjectITI.tripsproject.ui.Trips_History;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.TranslateAnimation;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+
+import com.ProjectITI.tripsproject.R;
+
+import java.util.List;
+
+public class RV_Trips_HistoryAdapter extends RecyclerView.Adapter<RV_Trips_HistoryAdapter.ViewHolder> {
+    private final Context context;
+    private List<HistoryDataRow> values;
+    LayoutInflater layoutInflater;
+    LayoutInflater in;
+    View mainView;
+    View card_id;
+;
+
+
+    public RV_Trips_HistoryAdapter(Context context, List<HistoryDataRow> values) {
+        this.context = context;
+        this.values = values;
+    }
+
+    @NonNull
+    @Override
+    public RV_Trips_HistoryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+
+        // Creating the PopupWindow
+        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        // inflatedLayoutView = layoutInflater.inflate(R.layout.fragment_show_trips_details, null);
+        in = LayoutInflater.from(parent.getContext());
+        mainView = in.inflate(R.layout.history_trips_details, parent, false);
+        ViewHolder vh = new ViewHolder(mainView);
+
+        card_id = mainView.findViewById(R.id.card_id);
+
+        return vh;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull final RV_Trips_HistoryAdapter.ViewHolder holder, final int position) {
+        //   holder.showDetails.setLayoutParams(new ConstraintLayout.LayoutParams(0,0));
+        holder.status.setText(values.get(position).getStatus());
+        holder.tripname.setText(values.get(position).getTripName());
+        holder.from.setText(values.get(position).getFrom());
+        holder.to.setText(values.get(position).getTo());
+        holder.date.setText(values.get(position).getData());
+        holder.time.setText(values.get(position).getTime());
+
+
+        holder.img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (holder.showDetails.getVisibility() == View.VISIBLE) {
+                    slideDown(holder.showDetails);
+                } else {
+                    slideUp(holder.showDetails);
+                }
+
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return values.size();
+    }
+
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public View view;
+        public TextView tripname;
+        public Button delete;
+        public TextView status;
+        public FrameLayout f;
+        public ImageView img;
+        public TextView from;
+        public TextView to;
+        public TextView date;
+        public TextView time;
+        public View showDetails;
+        public Button notes;
+        public View myView;
+
+        public ViewHolder(View v) {
+            super(v);
+            view = v;
+            tripname = v.findViewById(R.id.history_trip_name);
+            delete = v.findViewById(R.id.history_Delete);
+            status = v.findViewById(R.id.history_status);
+            img = v.findViewById(R.id.history_imageView_id);
+            //  f = v.findViewById(R.id.fragment_details);
+            from = v.findViewById(R.id.history_From_id);
+            to = v.findViewById(R.id.history_To_id);
+            date = v.findViewById(R.id.history_Date_id);
+            time = v.findViewById(R.id.history_time_id);
+            notes = v.findViewById(R.id.history_Notes);
+            showDetails = v.findViewById(R.id.historyshowTripsDetails);
+
+//            myView.setVisibility(View.GONE);
+        }
+    }
+
+    public void slideUp(View view) {
+        view.setVisibility(View.VISIBLE);
+        TranslateAnimation animate = new TranslateAnimation(
+                0,
+                0,                 // toXDelta
+                500,  // fromYDelta
+                0);                // toYDelta
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        view.startAnimation(animate);
+
+
+    }
+
+    // slide the view from its current position to below itself
+    public void slideDown(View view) {
+        TranslateAnimation animate = new TranslateAnimation(
+                0,                 // fromXDelta
+                0,                 // toXDelta
+                0,                 // fromYDelta
+                view.getHeight()*2);          // toYDelta
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        view.startAnimation(animate);
+        view.setVisibility(View.GONE);
+    }
+
+}

@@ -13,6 +13,20 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="MyCardViewStyle" parent="Theme.AppCompat.Light">
+        <item name="cardCornerRadius">6dp</item>
+        <item name="cardElevation">2dp</item>
+        <item name="contentPaddingBottom">@dimen/dp_double</item>
+        <item name="contentPaddingTop">@dimen/dp_double</item>
+        <item name="contentPaddingLeft">@dimen/dp_double</item>
+        <item name="contentPaddingRight">@dimen/dp_double</item>
+        <item name="cardBackgroundColor">@color/backgroundLight</item>
+    </style>
+
+
     <style name="TextPrimaryLabel" parent="Widget.Design.TextInputLayout">
         <!-- Hint color and label color in FALSE state -->
         <item name="android:textColorHint">#310093D7</item>
