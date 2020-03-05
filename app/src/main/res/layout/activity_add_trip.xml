@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddTrip">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/Trip_Name"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/Start_Point"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/tripName_Field"
+        app:layout_constraintTop_toBottomOf="@+id/tripName_Field" />
+
+    <fragment
+        android:id="@+id/startPoint_fragment"
+        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/End_Point"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/startPoint_fragment"
+        app:layout_constraintTop_toBottomOf="@+id/startPoint_fragment" />
+
+    <fragment
+        android:id="@+id/endPoint_fragment"
+        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <EditText
+        android:id="@+id/tripName_Field"
+        android:layout_width="match_parent"
+        android:layout_height="51dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="5dp"
+        android:ems="10"
+        android:background="@drawable/login_edittext_style"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <ImageView
+        android:id="@+id/date_Picker"
+        android:layout_width="79dp"
+        android:layout_height="79dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="28dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/endPoint_fragment"
+        app:srcCompat="@drawable/calendar_icon" />
+
+    <ImageView
+        android:id="@+id/alarm_Picker"
+        android:layout_width="79dp"
+        android:layout_height="79dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="44dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/endPoint_fragment"
+        app:srcCompat="@drawable/clock_icon" />
+
+    <Button
+        android:id="@+id/add_Trip_Btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="12dp"
+        android:text="Add Trip"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.42"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/repeat_Spinner" />
+
+    <Spinner
+        android:id="@+id/repeat_Spinner"
+        android:layout_width="144dp"
+        android:layout_height="41dp"
+        android:layout_marginStart="8dp"
+        android:entries="@array/repeat_arrays"
+        android:prompt="@string/repeat_prompt"
+        android:spinnerMode="dropdown"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/date_Selected" />
+
+    <Spinner
+        android:id="@+id/direction_Spinner"
+        android:layout_width="144dp"
+        android:layout_height="41dp"
+        android:layout_marginEnd="16dp"
+        android:entries="@array/direction_arrays"
+        android:prompt="@string/direction_prompt"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/time_Selected" />
+
+    <TextView
+        android:id="@+id/time_Selected"
+        android:layout_width="79dp"
+        android:layout_height="30dp"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="@+id/alarm_Picker"
+        app:layout_constraintTop_toBottomOf="@+id/alarm_Picker" />
+
+    <TextView
+        android:id="@+id/date_Selected"
+        android:layout_width="79dp"
+        android:layout_height="30dp"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="@+id/date_Picker"
+        app:layout_constraintTop_toBottomOf="@+id/date_Picker" />
+</androidx.constraintlayout.widget.ConstraintLayout>
