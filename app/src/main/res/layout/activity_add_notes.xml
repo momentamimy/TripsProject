@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddNotes">
+
+    <EditText
+        android:id="@+id/txtTime"
+        android:layout_width="255dp"
+        android:layout_height="66dp"
+        android:textSize="27sp">
+
+        <requestFocus></requestFocus>
+
+    </EditText>
+
+    <Button
+        android:id="@+id/SetTime"
+        android:layout_width="40dp"
+        android:layout_height="37dp"
+        android:layout_marginLeft="25sp"
+        android:baselineAligned="false"
+        android:text="SetTime"
+        android:textSize="30sp"></Button>
+
+    <Button
+        android:id="@+id/AddTimings"
+        android:layout_width="140sp"
+        android:layout_height="65sp"
+        android:layout_marginLeft="10sp"
+        android:text="ADD(+)"
+        android:textSize="30sp"></Button>
+
+</LinearLayout>

@@ -1,6 +1,8 @@
 package com.ProjectITI.tripsproject;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
@@ -17,10 +19,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.util.Calendar;
-
-import com.ProjectITI.tripsproject.AlertReceiver;
 import com.ProjectITI.tripsproject.ui.Trip;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
@@ -29,12 +27,16 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
-import static com.ProjectITI.tripsproject.Login.LoginPresenter.mAuth;
-import static com.ProjectITI.tripsproject.Login.LoginPresenter.databaseReference;
+
+import java.text.DateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 
-public class AddTrip extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener{
+import static com.ProjectITI.tripsproject.Login.LoginPresenter.databaseReference;
+import static com.ProjectITI.tripsproject.Login.LoginPresenter.mAuth;
 
+public class UpdateTripData extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
+    private TextView tripName ;
     private TextView timeSelected ;
     private ImageView timePicker ;
     DatePickerDialog picker;
@@ -42,12 +44,15 @@ public class AddTrip extends AppCompatActivity implements TimePickerDialog.OnTim
     private ImageView datePicker ;
     private Spinner spinner1, spinner2;
     PlacesClient placesClient;
+    AutocompleteSupportFragment autocompleteStartPointFragment ;
+    AutocompleteSupportFragment autocompleteEndPointFragment ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_trip);
+        setContentView(R.layout.activity_update_trip_data);
 
-        timeSelected = findViewById(R.id.time_Selected) ;
+        tripName = findViewById(R.id.tripNameUpdated_Field);
+        timeSelected = findViewById(R.id.time_Updated) ;
         timePicker = findViewById(R.id.time_Picker) ;
         timePicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,7 +61,7 @@ public class AddTrip extends AppCompatActivity implements TimePickerDialog.OnTim
                 timePicker.show(getSupportFragmentManager(), "time picker");
             }
         });
-        dateSelected = findViewById(R.id.date_Selected) ;
+        dateSelected = findViewById(R.id.date_Updated) ;
         datePicker = findViewById(R.id.date_Picker) ;
         datePicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,12 +71,12 @@ public class AddTrip extends AppCompatActivity implements TimePickerDialog.OnTim
                 int month = cldr.get(Calendar.MONTH);
                 int year = cldr.get(Calendar.YEAR);
                 // date picker dialog
-                picker = new DatePickerDialog(AddTrip.this,new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                dateSelected.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-                            }
-                        }, year, month, day);
+                picker = new DatePickerDialog(UpdateTripData.this,new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        dateSelected.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                    }
+                }, year, month, day);
                 picker.show();
             }
         });
@@ -80,14 +85,14 @@ public class AddTrip extends AppCompatActivity implements TimePickerDialog.OnTim
 
         // Setup Places Client
         if (!Places.isInitialized()) {
-            Places.initialize(AddTrip.this, apiKey);
+            Places.initialize(UpdateTripData.this, apiKey);
         }
         // Retrieve a PlacesClient (previously initialized - see MainActivity)
         placesClient = Places.createClient(this);
 
         //StartPoint Fragment
 
-        final AutocompleteSupportFragment autocompleteStartPointFragment =
+        autocompleteStartPointFragment =
                 (AutocompleteSupportFragment)
                         getSupportFragmentManager().findFragmentById(R.id.startPoint_fragment);
 
@@ -99,18 +104,18 @@ public class AddTrip extends AppCompatActivity implements TimePickerDialog.OnTim
                     public void onPlaceSelected(Place place) {
                         final LatLng latLng = place.getLatLng();
 
-                        Toast.makeText(AddTrip.this, ""+latLng.latitude, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UpdateTripData.this, ""+latLng.latitude, Toast.LENGTH_SHORT).show();
 
                     }
 
                     @Override
                     public void onError(Status status) {
-                        Toast.makeText(AddTrip.this, ""+status.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UpdateTripData.this, ""+status.getStatusMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
         //EndPoint Fragment
-        final AutocompleteSupportFragment autocompleteEndPointFragment =
+        autocompleteEndPointFragment =
                 (AutocompleteSupportFragment)
                         getSupportFragmentManager().findFragmentById(R.id.endPoint_fragment);
 
@@ -122,20 +127,26 @@ public class AddTrip extends AppCompatActivity implements TimePickerDialog.OnTim
                     public void onPlaceSelected(Place place) {
                         final LatLng latLng = place.getLatLng();
 
-                        Toast.makeText(AddTrip.this, ""+latLng.latitude, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UpdateTripData.this, ""+latLng.latitude, Toast.LENGTH_SHORT).show();
 
                     }
 
                     @Override
                     public void onError(Status status) {
-                        Toast.makeText(AddTrip.this, ""+status.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UpdateTripData.this, ""+status.getStatusMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
-        //mAuth = FirebaseAuth.getInstance();
-        //databaseReference = FirebaseDatabase.getInstance().getReference();
+        setValuesFromIntent();
     }
+    public void setValuesFromIntent(){
+        tripName.setText(getIntent().getStringExtra("tripName")) ;
+        timeSelected.setText(getIntent().getStringExtra("time"));
+        dateSelected.setText(getIntent().getStringExtra("date"));
+        autocompleteStartPointFragment.setText(getIntent().getStringExtra("startPoint"));
+        autocompleteEndPointFragment.setText(getIntent().getStringExtra("endPoint"));
 
+    }
 
     @Override
     public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
@@ -169,26 +180,15 @@ public class AddTrip extends AppCompatActivity implements TimePickerDialog.OnTim
         }
     }
 
-    public void addTrip(){
-
-        Trip trip = new Trip("test1", "Location 6 ", "test6", "1-1-2020", "10:30", "upcoming","one way");
-        databaseReference.child("Trips").child(mAuth.getUid()).push().setValue(trip);
-
-
-    }
-
-    public void addTripClick(View view) {
-        addTrip();
+    public void updateTripClick(View view) {
+        updateTrip();
         finish();
+
     }
-
-//    private void cancelAlarm() {
-//        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//        Intent intent = new Intent(this, AlertReceiver.class);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
-//
-//        alarmManager.cancel(pendingIntent);
-//        timeSelected.setText("Alarm canceled");
-//    }
-
+    public void updateTrip(){
+        Trip trip = new Trip(tripName.getText().toString(),"test", "test6",
+                timeSelected.getText().toString(), dateSelected.getText().toString(),
+                "Done","one way");
+        databaseReference.child("Trips").child(mAuth.getUid()).push().setValue(trip);
+    }
 }

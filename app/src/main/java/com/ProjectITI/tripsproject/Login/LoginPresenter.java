@@ -22,10 +22,10 @@ public class LoginPresenter implements LoginContract.PresenterInterface{
 
     LoginContract.ViewInterface viewInterface;
     Activity activity;
+    public static FirebaseAuth mAuth;
+    public static DatabaseReference databaseReference;
     public static String userId ;
 
-    private FirebaseAuth mAuth;
-    private DatabaseReference databaseReference;
 
     public LoginPresenter(LoginContract.ViewInterface viewInterface, Activity activity) {
         this.viewInterface = viewInterface;

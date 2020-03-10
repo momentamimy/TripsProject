@@ -78,6 +78,7 @@ public class LoginFragment extends Fragment implements LoginContract.ViewInterfa
 
     @Override
     public void LoginSucceed(String email,String pass,String userName) {
+
         Toast.makeText(getContext(),userName,Toast.LENGTH_LONG).show();
         int LAUNCH_SECOND_ACTIVITY = 1 ;
         Intent i = new Intent(getActivity(), HomeScreen.class);

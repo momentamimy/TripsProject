@@ -16,6 +16,8 @@
             android:theme="@style/AppTheme.CustomeThemeForPopWindow">
         </activity>
 
+        <activity android:name=".UpdateTripData">
+        </activity>
         <activity android:name=".ui.Trips_History.Alert.deleteTrip"
             android:theme="@style/AppTheme.CustomeThemeForPopWindow">
         </activity>
@@ -23,7 +25,7 @@
         <activity
             android:name=".HomeScreen"
             android:label="@string/title_activity_home_screen"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
             android:name=".SplashScreen"
@@ -33,13 +35,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".LoginSignup_Activity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".AddTrip" />
+        <activity android:name=".LoginSignup_Activity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".AddTrip"/>
 
         <receiver android:name=".AlertReceiver" />
     </application>
+
+
 
 </manifest>

@@ -96,42 +96,42 @@
         app:srcCompat="@drawable/clock_icon" />
 
     <Button
-        android:id="@+id/add_Trip_Btn"
+        android:id="@+id/Update_Trip_Btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="12dp"
-        android:onClick="addTripClick"
-        android:text="Add Trip"
+        android:layout_marginStart="96dp"
+        android:layout_marginTop="20dp"
+        android:onClick="updateTripClick"
+        android:text="Update Trip"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.42"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/repeat_Spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/repeat_Spinner_Updated" />
 
     <Spinner
-        android:id="@+id/repeat_Spinner"
+        android:id="@+id/repeat_Spinner_Updated"
         android:layout_width="144dp"
         android:layout_height="41dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:entries="@array/repeat_arrays"
         android:prompt="@string/repeat_prompt"
         android:spinnerMode="dropdown"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/date_Selected" />
+        app:layout_constraintTop_toBottomOf="@+id/date_Updated" />
 
     <Spinner
-        android:id="@+id/direction_Spinner"
+        android:id="@+id/direction_Spinner_updated"
         android:layout_width="144dp"
         android:layout_height="41dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="16dp"
         android:entries="@array/direction_arrays"
         android:prompt="@string/direction_prompt"
         android:spinnerMode="dropdown"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time_Selected" />
+        app:layout_constraintTop_toBottomOf="@+id/time_Updated" />
 
     <TextView
-        android:id="@+id/time_Selected"
+        android:id="@+id/time_Updated"
         android:layout_width="79dp"
         android:layout_height="30dp"
         android:gravity="center"
@@ -139,7 +139,7 @@
         app:layout_constraintTop_toBottomOf="@+id/time_Picker" />
 
     <TextView
-        android:id="@+id/date_Selected"
+        android:id="@+id/date_Updated"
         android:layout_width="79dp"
         android:layout_height="30dp"
         android:gravity="center"

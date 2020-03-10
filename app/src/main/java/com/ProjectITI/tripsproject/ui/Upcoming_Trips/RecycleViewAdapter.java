@@ -24,6 +24,7 @@ import com.ProjectITI.tripsproject.HomeScreen;
 import com.ProjectITI.tripsproject.Model.Trip;
 import com.ProjectITI.tripsproject.Model.TripDao;
 import com.ProjectITI.tripsproject.R;
+import com.ProjectITI.tripsproject.UpdateTripData;
 import com.ProjectITI.tripsproject.ui.Trips_History.Alert.deleteTrip;
 
 import java.util.ArrayList;
@@ -92,7 +93,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 */
         holder.buttonViewOption.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 //creating a popup menu
                 PopupMenu popup = new PopupMenu(context, holder.buttonViewOption);
                 //inflating menu from xml resource
@@ -107,6 +108,13 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                                 //open AddNotes activity + send tripId with the intent
                                 break;
                             case R.id.Edit:
+                                Intent intent = new Intent (view.getContext(), UpdateTripData.class);
+                                intent.putExtra("tripName",values.get(position).getName());
+                                intent.putExtra("startPoint",values.get(position).getFrom());
+                                intent.putExtra("endPoint",values.get(position).getTo());
+                                intent.putExtra("date",values.get(position).getDate());
+                                intent.putExtra("time",values.get(position).getTime());
+                                (view.getContext()).startActivity(intent);
                                 //open EditTrip activity + send tripId with the intent
                                 //handle menu2 click
                                 break;
@@ -115,10 +123,10 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                             case R.id.Delete:
                                 //TripDao.deleteTrip(values.get(position).getId());
                                 String trip_id = values.get(position).getId();
-                                Intent intent = new Intent(context, deleteTrip.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.putExtra("trip_id", trip_id);
-                                context.startActivity(intent);
+                                Intent i = new Intent(context, deleteTrip.class);
+                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                i.putExtra("trip_id", trip_id);
+                                context.startActivity(i);
                                 break;
                         }
                         return false;
