@@ -1,14 +1,14 @@
-package com.ProjectITI.tripsproject.ui.share;
+package com.ProjectITI.tripsproject.ui.Logout;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class ShareViewModel extends ViewModel {
+public class LogoutShareViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public ShareViewModel() {
+    public LogoutShareViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("This is share fragment");
     }

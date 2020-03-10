@@ -24,14 +24,15 @@
                 android:id="@+id/Email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/login_edittext_style"
                 android:drawableStart="@drawable/ic_email"
                 android:drawablePadding="12dp"
                 android:ems="10"
                 android:hint="Email"
+                android:inputType="text"
                 android:maxLines="1"
-                android:background="@drawable/login_edittext_style"
                 android:padding="12dp"
-                android:inputType="text"/>
+                android:text="nadaezzat123@yahoo.com" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -50,16 +51,16 @@
                 android:id="@+id/Password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/login_edittext_style"
                 android:drawableStart="@drawable/ic_locked"
                 android:drawablePadding="12dp"
                 android:ems="10"
-                android:padding="12dp"
                 android:hint="Pass"
-                android:textColor="#bac3c6"
-                android:maxLines="1"
-                android:background="@drawable/login_edittext_style"
                 android:inputType="textPassword"
-                />
+                android:maxLines="1"
+                android:padding="12dp"
+                android:text="123456"
+                android:textColor="#bac3c6" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </RelativeLayout>

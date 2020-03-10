@@ -18,13 +18,10 @@
     <item android:title="Other">
         <menu>
             <item
-                android:id="@+id/nav_sync"
-                android:icon="@drawable/ic_menu_send"
-                android:title="@string/menu_sync" />
-            <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_menu_share"
                 android:title="@string/menu_logout" />
+
         </menu>
     </item>
 

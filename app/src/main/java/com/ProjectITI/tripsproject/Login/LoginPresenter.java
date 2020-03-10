@@ -1,11 +1,13 @@
 package com.ProjectITI.tripsproject.Login;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.ProjectITI.tripsproject.HomeScreen;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -20,6 +22,7 @@ public class LoginPresenter implements LoginContract.PresenterInterface{
 
     LoginContract.ViewInterface viewInterface;
     Activity activity;
+    public static String userId ;
 
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
@@ -43,6 +46,8 @@ public class LoginPresenter implements LoginContract.PresenterInterface{
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists())
                             {
+                                userId = mAuth.getUid();
+                                Log.v("tag",mAuth.getUid());
                                 viewInterface.LoginSucceed(email,pass,dataSnapshot.getValue(String.class));
                             }
                         }

@@ -9,6 +9,10 @@
     android:layout_margin="@dimen/dp_single"
     android:clickable="true"
     android:focusable="true"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="20dp"
+    android:layout_marginBottom="20dp"
+    android:layout_marginRight="20dp"
     android:foreground="?android:attr/selectableItemBackground">
 
   <androidx.constraintlayout.widget.ConstraintLayout
@@ -151,19 +155,21 @@
         app:layout_constraintRight_toLeftOf="@+id/showNotes"
         app:layout_constraintTop_toBottomOf="@+id/To_id" />
 
-    <Button
-        android:id="@+id/showNotes"
-        android:layout_width="62dp"
-        android:layout_height="37dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/notes40"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toRightOf="@+id/start"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/To_id" />
 
-    <TextView
+      <Spinner
+          android:id="@+id/showNotes"
+          android:layout_width="60dp"
+          android:layout_height="45dp"
+          android:layout_marginTop="10dp"
+          android:autofillHints="."
+          android:background="@drawable/ic_pin"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintHorizontal_bias="0.0"
+          app:layout_constraintLeft_toRightOf="@+id/start"
+          app:layout_constraintRight_toRightOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/To_id"  />
+
+      <TextView
         android:id="@+id/textViewOptions"
         android:layout_width="30dp"
         android:layout_height="50dp"

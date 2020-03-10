@@ -1,6 +1,7 @@
 package com.ProjectITI.tripsproject.Login;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.ProjectITI.tripsproject.HomeScreen;
 import com.ProjectITI.tripsproject.R;
 
 
@@ -77,6 +79,9 @@ public class LoginFragment extends Fragment implements LoginContract.ViewInterfa
     @Override
     public void LoginSucceed(String email,String pass,String userName) {
         Toast.makeText(getContext(),userName,Toast.LENGTH_LONG).show();
+        int LAUNCH_SECOND_ACTIVITY = 1 ;
+        Intent i = new Intent(getActivity(), HomeScreen.class);
+        getActivity().startActivity(i);
     }
 
     @Override

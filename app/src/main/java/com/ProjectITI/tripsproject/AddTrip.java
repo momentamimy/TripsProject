@@ -20,7 +20,6 @@ import java.text.DateFormat;
 import java.util.Calendar;
 
 import com.ProjectITI.tripsproject.AlertReceiver;
-import com.example.tripsproject.TimePickerFragment;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;

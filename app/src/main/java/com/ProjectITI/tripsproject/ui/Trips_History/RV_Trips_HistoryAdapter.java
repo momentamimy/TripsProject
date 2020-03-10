@@ -1,6 +1,10 @@
 package com.ProjectITI.tripsproject.ui.Trips_History;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,27 +12,34 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.ProjectITI.tripsproject.Model.Trip;
+import com.ProjectITI.tripsproject.Model.TripDao;
 import com.ProjectITI.tripsproject.R;
+import com.ProjectITI.tripsproject.ui.Trips_History.Alert.deleteTrip;
+import com.ProjectITI.tripsproject.ui.Trips_History.Notes.showNotes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RV_Trips_HistoryAdapter extends RecyclerView.Adapter<RV_Trips_HistoryAdapter.ViewHolder> {
-    private final Context context;
-    private List<HistoryDataRow> values;
+    private Context context;
+    private List<Trip> values;
     LayoutInflater layoutInflater;
     LayoutInflater in;
     View mainView;
     View card_id;
-;
+    PopupWindow popUp;
+    ArrayList<String> categories = new ArrayList<String>();
 
 
-    public RV_Trips_HistoryAdapter(Context context, List<HistoryDataRow> values) {
+    public RV_Trips_HistoryAdapter(Context context, List<Trip> values) {
         this.context = context;
         this.values = values;
     }
@@ -36,50 +47,66 @@ public class RV_Trips_HistoryAdapter extends RecyclerView.Adapter<RV_Trips_Histo
     @NonNull
     @Override
     public RV_Trips_HistoryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-
         // Creating the PopupWindow
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         // inflatedLayoutView = layoutInflater.inflate(R.layout.fragment_show_trips_details, null);
         in = LayoutInflater.from(parent.getContext());
         mainView = in.inflate(R.layout.history_trips_details, parent, false);
         ViewHolder vh = new ViewHolder(mainView);
-
         card_id = mainView.findViewById(R.id.card_id);
-
         return vh;
     }
 
     @Override
     public void onBindViewHolder(@NonNull final RV_Trips_HistoryAdapter.ViewHolder holder, final int position) {
-        //   holder.showDetails.setLayoutParams(new ConstraintLayout.LayoutParams(0,0));
         holder.status.setText(values.get(position).getStatus());
-        holder.tripname.setText(values.get(position).getTripName());
+        holder.tripname.setText(values.get(position).getName());
         holder.from.setText(values.get(position).getFrom());
         holder.to.setText(values.get(position).getTo());
-        holder.date.setText(values.get(position).getData());
+        holder.date.setText(values.get(position).getName());
         holder.time.setText(values.get(position).getTime());
-
-
         holder.img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (holder.showDetails.getVisibility() == View.VISIBLE) {
                     slideDown(holder.showDetails);
                 } else {
                     slideUp(holder.showDetails);
                 }
+            }
+        });
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String trip_id = values.get(position).getId();
+                Intent intent = new Intent(context, deleteTrip.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("trip_id", trip_id);
+                context.startActivity(intent);
+            }
+        });
+       holder.notes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                categories = new ArrayList<>();
+               categories = values.get(position).getNotes();
+                Log.i("tag","getNotes "+categories);
+                Intent intent = new Intent(context, showNotes.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putStringArrayListExtra("data", categories);
+                    context.startActivity(intent);
 
             }
         });
+
+
     }
 
     @Override
     public int getItemCount() {
         return values.size();
     }
-
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public View view;
@@ -111,7 +138,6 @@ public class RV_Trips_HistoryAdapter extends RecyclerView.Adapter<RV_Trips_Histo
             notes = v.findViewById(R.id.history_Notes);
             showDetails = v.findViewById(R.id.historyshowTripsDetails);
 
-//            myView.setVisibility(View.GONE);
         }
     }
 

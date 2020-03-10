@@ -1,4 +1,4 @@
-package com.ProjectITI.tripsproject.ui.share;
+package com.ProjectITI.tripsproject.ui.Logout;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,14 +15,14 @@ import androidx.lifecycle.ViewModelProviders;
 import com.ProjectITI.tripsproject.R;
 
 
-public class ShareFragment extends Fragment {
+public class LogoutFragment extends Fragment {
 
-    private ShareViewModel shareViewModel;
+    private LogoutShareViewModel shareViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         shareViewModel =
-                ViewModelProviders.of(this).get(ShareViewModel.class);
+                ViewModelProviders.of(this).get(LogoutShareViewModel.class);
         View root = inflater.inflate(R.layout.fragment_share, container, false);
         final TextView textView = root.findViewById(R.id.text_share);
         shareViewModel.getText().observe(this, new Observer<String>() {
