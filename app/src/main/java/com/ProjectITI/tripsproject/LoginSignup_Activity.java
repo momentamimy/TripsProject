@@ -12,6 +12,9 @@ import android.view.View;
 
 import com.ProjectITI.tripsproject.Login.LoginFragment;
 import com.ProjectITI.tripsproject.SignUp.SignupFragment;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+
 
 public class LoginSignup_Activity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener,
         SignupFragment.OnFragmentInteractionListener {

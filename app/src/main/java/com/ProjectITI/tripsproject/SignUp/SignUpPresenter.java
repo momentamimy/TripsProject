@@ -1,12 +1,17 @@
 package com.ProjectITI.tripsproject.SignUp;
 
-import android.app.Activity;
-import android.content.Context;
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
+import android.view.Window;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
+import com.ProjectITI.tripsproject.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -15,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.victor.loading.rotate.RotateLoading;
 
 public class SignUpPresenter implements SignUpContract.PresenterInterface{
 
@@ -22,18 +28,21 @@ public class SignUpPresenter implements SignUpContract.PresenterInterface{
 
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
-    Activity activity;
+    AppCompatActivity activity;
 
-    public SignUpPresenter(SignUpContract.ViewInterface viewInterface,Activity activity) {
+    Dialog loadingDialog;
+
+    public SignUpPresenter(SignUpContract.ViewInterface viewInterface, AppCompatActivity activity) {
         this.viewInterface = viewInterface;
         this.activity=activity;
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
+
     }
 
     @Override
     public void createUser(final String email, final String userName, final String pass) {
-
+        MyCustomDialog();
         mAuth.createUserWithEmailAndPassword(email, pass)
                 .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -45,6 +54,8 @@ public class SignUpPresenter implements SignUpContract.PresenterInterface{
                             databaseReference.child("users").child(user.getUid()).child("Email").setValue(email);
                             databaseReference.child("users").child(user.getUid()).child("UserName").setValue(userName);
                             databaseReference.child("users").child(user.getUid()).child("Password").setValue(pass);
+
+                            Toast.makeText(activity, "Registered Succesfully",Toast.LENGTH_SHORT).show();
                         } else {
                             // If sign in fails, display a message to the user.
                             if (task.getException() instanceof FirebaseAuthUserCollisionException)
@@ -55,8 +66,24 @@ public class SignUpPresenter implements SignUpContract.PresenterInterface{
 
 
                         }
+                        loadingDialog.dismiss();
                     }
 
                 });
+    }
+
+
+    public void MyCustomDialog() {
+        loadingDialog = new Dialog(activity);
+        loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        loadingDialog.setContentView(R.layout.loading_dialog);
+        Window window = loadingDialog.getWindow();
+        window.setLayout(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
+        loadingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        RotateLoading rotateLoading;
+        rotateLoading = loadingDialog.findViewById(R.id.rotateloading);
+        rotateLoading.start();
+        loadingDialog.show();
     }
 }

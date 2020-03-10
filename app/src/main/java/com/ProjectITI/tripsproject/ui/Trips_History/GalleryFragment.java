@@ -17,13 +17,14 @@ import com.ProjectITI.tripsproject.Login.LoginPresenter;
 import com.ProjectITI.tripsproject.Model.Trip;
 import com.ProjectITI.tripsproject.Model.TripDao;
 import com.ProjectITI.tripsproject.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GalleryFragment extends Fragment {
     public static Context context = HomeScreen.context;
-    public String userId = LoginPresenter.userId;
+    public String userId = FirebaseAuth.getInstance().getUid();
 
     private static RecyclerView recyclerView;
     private static RecyclerView.Adapter mAdapter;

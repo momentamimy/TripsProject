@@ -19,6 +19,7 @@ import com.ProjectITI.tripsproject.Login.LoginPresenter;
 import com.ProjectITI.tripsproject.Model.Trip;
 import com.ProjectITI.tripsproject.Model.TripDao;
 import com.ProjectITI.tripsproject.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -27,7 +28,7 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    public static String userId = LoginPresenter.userId;
+    public static String userId = FirebaseAuth.getInstance().getUid();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference("Trips");
 

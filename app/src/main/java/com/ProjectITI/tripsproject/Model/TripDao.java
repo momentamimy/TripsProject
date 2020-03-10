@@ -10,6 +10,7 @@ import com.ProjectITI.tripsproject.HomeScreen;
 import com.ProjectITI.tripsproject.Login.LoginPresenter;
 import com.ProjectITI.tripsproject.ui.Trips_History.GalleryFragment;
 import com.ProjectITI.tripsproject.ui.Upcoming_Trips.HomeFragment;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,7 +24,7 @@ import java.util.Map;
 public class TripDao {
     static Application application = HomeScreen.application;
     private static DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-    static String userId = LoginPresenter.userId;
+    static String userId = FirebaseAuth.getInstance().getUid();
 
     public static void AddTrip(Trip trip)
     {

@@ -27,13 +27,14 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 
-import static com.ProjectITI.tripsproject.Login.LoginPresenter.databaseReference;
-import static com.ProjectITI.tripsproject.Login.LoginPresenter.mAuth;
 
 public class UpdateTripData extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
     private TextView tripName ;
@@ -46,11 +47,15 @@ public class UpdateTripData extends AppCompatActivity implements TimePickerDialo
     PlacesClient placesClient;
     AutocompleteSupportFragment autocompleteStartPointFragment ;
     AutocompleteSupportFragment autocompleteEndPointFragment ;
+
+    FirebaseAuth mAuth;
+    DatabaseReference databaseReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_trip_data);
-
+        mAuth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
         tripName = findViewById(R.id.tripNameUpdated_Field);
         timeSelected = findViewById(R.id.time_Updated) ;
         timePicker = findViewById(R.id.time_Picker) ;

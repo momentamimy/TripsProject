@@ -29,8 +29,10 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
-import static com.ProjectITI.tripsproject.Login.LoginPresenter.mAuth;
-import static com.ProjectITI.tripsproject.Login.LoginPresenter.databaseReference;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.Arrays;
 
 public class AddTrip extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener{
@@ -42,11 +44,15 @@ public class AddTrip extends AppCompatActivity implements TimePickerDialog.OnTim
     private ImageView datePicker ;
     private Spinner spinner1, spinner2;
     PlacesClient placesClient;
+
+    FirebaseAuth mAuth;
+    DatabaseReference databaseReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_trip);
-
+        mAuth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
         timeSelected = findViewById(R.id.time_Selected) ;
         timePicker = findViewById(R.id.time_Picker) ;
         timePicker.setOnClickListener(new View.OnClickListener() {

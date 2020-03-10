@@ -7,7 +7,7 @@
     tools:context=".Login.LoginFragment">
 
     <RelativeLayout
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:id="@+id/Login_Layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -83,11 +83,40 @@
         android:layout_marginTop="25dp"
         android:layout_centerHorizontal="true"
         android:id="@+id/SignUpActivity"
-        android:layout_below="@+id/Login"
+        android:layout_alignParentBottom="true"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="sign up"
         android:textSize="18sp"
         android:textColor="#fff"
-        android:background="@drawable/glory_button_dark"/>
+        android:background="@drawable/glory_button_dark"
+        android:layout_marginBottom="20dp"/>
+
+    <androidx.cardview.widget.CardView
+        app:cardElevation="5dp"
+        app:cardCornerRadius="5dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_button_gmail"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true">
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/login_button_facebook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.gms.common.SignInButton
+        android:layout_marginStart="45dp"
+        android:layout_marginEnd="45dp"
+        android:id="@+id/login_button_gmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Login"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"/>
+
 </RelativeLayout>

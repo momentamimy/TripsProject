@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -96,7 +97,7 @@ public class SignupFragment extends Fragment implements SignUpContract.ViewInter
 
     public void setupPresinter()
     {
-        presenterInterface = new SignUpPresenter(this,getActivity());
+        presenterInterface = new SignUpPresenter(this, (AppCompatActivity) getActivity());
     }
 
     public void signUp() {
