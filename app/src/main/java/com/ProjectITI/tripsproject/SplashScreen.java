@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 
 import com.appolica.flubber.Flubber;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -24,6 +25,7 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         logoImageView = findViewById(R.id.SplashLogo);
         splashRelativeLayout = findViewById(R.id.SplashLayout);

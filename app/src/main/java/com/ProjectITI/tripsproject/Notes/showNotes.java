@@ -1,12 +1,9 @@
-package com.ProjectITI.tripsproject.ui.Trips_History.Notes;
+package com.ProjectITI.tripsproject.Notes;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,21 +26,6 @@ public class showNotes extends AppCompatActivity {
         result = new ArrayList<String>();
         final Intent intent = getIntent();
         result = intent.getStringArrayListExtra("data");
-      /*
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
-                android.R.layout.simple_spinner_dropdown_item, result);
-        AlertDialog.Builder builder1 = new AlertDialog.Builder(showNotes.this);
-        builder1.setTitle("Notes")
-                .setAdapter(adapter, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        dialog.cancel();
-                        finshthisActivity();
-                        }
-
-                }).create().show();
-  */
 
       DisplayMetrics dm = new DisplayMetrics();
       getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -56,9 +38,8 @@ public class showNotes extends AppCompatActivity {
          recyclerView = findViewById(R.id.recycle_view);
          txt = findViewById(R.id.no_notes);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+
         recyclerView.setLayoutManager(layoutManager);
-
-
         if(result==null || result.size() ==0 )
         {
             recyclerView.setVisibility(View.INVISIBLE);

@@ -19,6 +19,7 @@
         android:layout_marginTop="150dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        android:visibility="invisible"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="32dp">

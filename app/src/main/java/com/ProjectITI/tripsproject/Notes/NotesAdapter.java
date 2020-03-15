@@ -1,4 +1,4 @@
-package com.ProjectITI.tripsproject.ui.Trips_History.Notes;
+package com.ProjectITI.tripsproject.Notes;
 
 import android.content.Context;
 import android.util.Log;
@@ -32,10 +32,7 @@ public class NotesAdapter  extends RecyclerView.Adapter<NotesAdapter.NotesViewHo
 
     @Override
     public void onBindViewHolder(@NonNull NotesViewHolder holder, int position) {
-        Log.i("tag","data before : "+position +": "+NotestList.get(position));
-
         if(NotestList.get(position) != null) {
-            Log.i("tag","data : "+NotestList.get(position).toString());
             holder.text.setText(NotestList.get(position));
         }else{
             holder.text.setText("NOTES  : ");
@@ -45,7 +42,6 @@ public class NotesAdapter  extends RecyclerView.Adapter<NotesAdapter.NotesViewHo
 
     @Override
     public int getItemCount() {
-        Log.i("tag","Notes size : "+NotestList.size());
         return NotestList.size();
     }
 

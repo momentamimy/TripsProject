@@ -30,21 +30,30 @@ public class Trip {
 
     private String status;
 
-
-    private String getRepeat() {
-        return repeat;
-    }
-
-    private void setRepeat(String repeat) {
-        this.repeat = repeat;
-    }
-
     private String type;
 
     private String repeat;
-
     private ArrayList<String> notes;
 
+
+    public String getRepeat() {
+        return repeat;
+    }
+
+    public void setRepeat(String repeat) {
+        this.repeat = repeat;
+    }
+    public Trip(String id, String name, String from, String to, String time, String date, String status, String type, String repeat) {
+        this.id = id;
+        Name = name;
+        From = from;
+        To = to;
+        Time = time;
+        Date = date;
+        this.status = status;
+        this.type = type;
+        this.repeat = repeat;
+    }
     public Trip(String id, String name, String from, String to, String time, String date, String status, String type, String repeat, ArrayList<String> notes) {
         this.id = id;
         Name = name;

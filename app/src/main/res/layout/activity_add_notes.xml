@@ -1,36 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".AddNotes">
+    android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/txtTime"
-        android:layout_width="255dp"
-        android:layout_height="66dp"
-        android:textSize="27sp">
+    <LinearLayout
+        android:id="@+id/parent_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:orientation="vertical">
 
-        <requestFocus></requestFocus>
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="111dp"
+            android:gravity="center"
+            android:shadowColor="#007C6666"
+            android:text="Add Your Notes"
+            android:textColorHighlight="#00070606"
+            android:textColorHint="#00070606"
+            android:textColorLink="#00090808"
+            android:textSize="30sp" />
 
-    </EditText>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/note_recycle_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/SetTime"
-        android:layout_width="40dp"
-        android:layout_height="37dp"
-        android:layout_marginLeft="25sp"
-        android:baselineAligned="false"
-        android:text="SetTime"
-        android:textSize="30sp"></Button>
+        <EditText
+            android:id="@+id/notes_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ems="10"
+            android:hint="Enter your Note"
+            android:inputType="textPersonName" />
 
-    <Button
-        android:id="@+id/AddTimings"
-        android:layout_width="140sp"
-        android:layout_height="65sp"
-        android:layout_marginLeft="10sp"
-        android:text="ADD(+)"
-        android:textSize="30sp"></Button>
+        <Button
+            android:id="@+id/add_button"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:onClick="onAddNote"
+            android:text="Add " />
 
-</LinearLayout>
+
+        <Button
+            android:id="@+id/add_field_button"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="50dp"
+            android:background="#555"
+            android:onClick="onClickSubmit"
+            android:paddingLeft="5dp"
+            android:text="Submit"
+            android:textColor="#FFF" />
+    </LinearLayout>
+</ScrollView>

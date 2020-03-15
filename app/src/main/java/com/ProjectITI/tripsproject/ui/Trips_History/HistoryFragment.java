@@ -2,11 +2,13 @@ package com.ProjectITI.tripsproject.ui.Trips_History;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,24 +24,24 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GalleryFragment extends Fragment {
+public class HistoryFragment extends Fragment {
+    private historyContract.PresenterInterface presenterInterface;
     public static Context context = HomeScreen.context;
     public String userId = FirebaseAuth.getInstance().getUid();
 
     private static RecyclerView recyclerView;
     private static RecyclerView.Adapter mAdapter;
     private static RecyclerView.LayoutManager layoutManager;
-    private List<Trip> input = new ArrayList<>();
     private static View noTrips;
-    private GalleryViewModel galleryViewModel;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        galleryViewModel = ViewModelProviders.of(this).get(GalleryViewModel.class);
         View root = inflater.inflate(R.layout.fragment_gallery, container, false);
         noTrips = root.findViewById(R.id.history_no_trips_layout);
-
         recyclerView = (RecyclerView) root.findViewById(R.id.history_recycleView_id);
-        TripDao.getAllData("allStatus");
+
+        presenterInterface = new historyPresenter();
+       // presenterInterface.getAllData();
         return root;
     }
 
@@ -61,4 +63,30 @@ public class GalleryFragment extends Fragment {
 
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.i("tag","onPause");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("tag","onResume");
+       // TripDao.getAllData("allStatus");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+       presenterInterface.getAllData();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.i("tag","onCreate(@Nullable Bundle savedInstanceState) ");
+
+    }
 }

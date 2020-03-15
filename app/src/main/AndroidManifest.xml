@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ProjectITI.tripsproject">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -12,15 +14,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.Trips_History.Notes.showNotes"
+        <activity android:name=".Notes.showNotes"
             android:theme="@style/AppTheme.CustomeThemeForPopWindow">
         </activity>
 
-        <activity android:name=".UpdateTripData">
+        <activity android:name=".updateTrip.UpdateTripData">
         </activity>
-        <activity android:name=".ui.Trips_History.Alert.deleteTrip"
+        <activity android:name=".ui.Upcoming_Trips.showCalenderandTimepicker">
+        </activity>
+        <activity android:name=".Alert.Trip_alert"
             android:theme="@style/AppTheme.CustomeThemeForPopWindow">
         </activity>
+
+        <activity android:name=".addNotes.AddNotes">
+        </activity>
+
 
         <activity
             android:name=".HomeScreen"
@@ -38,7 +46,7 @@
         </activity>
         <activity android:name=".LoginSignup_Activity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".AddTrip">
+        <activity android:name=".AddTrip.AddTrip">
 
         </activity>
 

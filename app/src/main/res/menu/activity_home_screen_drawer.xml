@@ -6,10 +6,10 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_upcomping_trips"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_star_black_24dp"
             android:title="@string/menu_history" />
         <item
-            android:id="@+id/nav_upcoming"
+            android:id="@+id/nav_History"
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/menu_upcoming" />
 
@@ -19,7 +19,7 @@
         <menu>
             <item
                 android:id="@+id/nav_logout"
-                android:icon="@drawable/ic_menu_share"
+                android:icon="@drawable/ic_settings_black_24dp"
                 android:title="@string/menu_logout" />
 
         </menu>

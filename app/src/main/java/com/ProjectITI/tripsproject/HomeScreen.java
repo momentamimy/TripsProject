@@ -1,48 +1,62 @@
 package com.ProjectITI.tripsproject;
 
+import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-
+import android.widget.TextView;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.ProjectITI.tripsproject.Login.LoginPresenter;
+import com.ProjectITI.tripsproject.AddTrip.AddTrip;
+import com.ProjectITI.tripsproject.Alert.Trip_alert;
+import com.ProjectITI.tripsproject.Model.Trip;
 import com.ProjectITI.tripsproject.Model.TripDao;
+import com.ProjectITI.tripsproject.ui.Trips_History.HistoryFragment;
+import com.ProjectITI.tripsproject.ui.Upcoming_Trips.HomeFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class HomeScreen extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
-    public static Context context ;
+    public static Context context;
     public static Application application;
-    String user ;
-
+    private NavigationView navigationView;
+    String user;
+    AlertDialog alertDialog;
     private AppBarConfiguration mAppBarConfiguration;
     ActionBarDrawerToggle toggle;
 
     FirebaseAuth mAuth;
+    DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         application = getApplication();
         context = getApplicationContext();
         mAuth = FirebaseAuth.getInstance();
@@ -58,32 +72,58 @@ public class HomeScreen extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 goToAddTripActivity();
-             //   Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_upcomping_trips, R.id.nav_upcoming, R.id.nav_slideshow,
-                R.id.nav_tools, R.id.nav_logout, R.id.nav_sync)
-                .setDrawerLayout(drawer)
-                .build();
+         drawer = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+        setNavigationInformation();
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle
+                (this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
+        HomeFragment home=new HomeFragment();
+        getSupportFragmentManager().beginTransaction().replace( R.id.nav_host_fragment,home).commit();
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
-        /*
-        List<String > notes = new ArrayList<>();
-        notes.add("first note");
-        notes.add("second note");
-        notes.add("third note");
+                Fragment selectedFregment=null;
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_logout:
+                        logout();
+                        Toast.makeText(getApplicationContext(),"Log Out",Toast.LENGTH_LONG).show();
+                        break;
+                    case  R.id.nav_upcomping_trips:
+                        selectedFregment=new HomeFragment();
+                       // getSupportFragmentManager().beginTransaction().replace( R.id.nav_host_fragment,selectedFregment).commit();
+                        transaction.replace( R.id.nav_host_fragment, selectedFregment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                        break;
+                    case R.id.nav_History:
+                        selectedFregment=new HistoryFragment() ;
+                        transaction.replace( R.id.nav_host_fragment, selectedFregment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                        break;
+                }
+                drawer.closeDrawers();
+                return true;
 
-        TripDao.addNotes("-M1rt7kFfTdZoROJxVQ8",notes);
-        */
-        //TripDao.getTripNotes("-M1rt7kFfTdZoROJxVQ8");
+            }
+        });
+
+
     }
-    //public com.ProjectITI.tripsproject.Model.Trip(String name, String from, String to, String time, String date, String status, String type) {
+
+    private void logout() {
+        Intent intent = new Intent(getApplicationContext(), Trip_alert.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("action", "logout");
+        getApplicationContext().startActivity(intent);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -99,11 +139,25 @@ public class HomeScreen extends AppCompatActivity {
 
     public void goToAddTripActivity() {
         int LAUNCH_SECOND_ACTIVITY = 1;
-
-        Log.i("tag","gotoAddTrip");
-            Intent i = new Intent(this, AddTrip.class);
-            startActivityForResult(i, LAUNCH_SECOND_ACTIVITY);
+        Intent i = new Intent(this, AddTrip.class);
+        startActivityForResult(i, LAUNCH_SECOND_ACTIVITY);
     }
+
+    private void setNavigationInformation() {
+        View hView = navigationView.getHeaderView(0);
+
+        SharedPreferences sh = getSharedPreferences("USER", 0);
+        String user_name = sh.getString("name", "");
+
+        TextView username = (TextView) hView.findViewById(R.id.username_id);
+        username.setText(user_name);
+
+        TextView email = (TextView) hView.findViewById(R.id.email_id);
+        email.setText(mAuth.getCurrentUser().getEmail());
+    }
+
+
+
 
 
 }
