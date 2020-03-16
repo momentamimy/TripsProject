@@ -104,14 +104,17 @@ public class HomeScreen extends AppCompatActivity {
                         transaction.commit();
                         break;
                     case R.id.nav_History:
-                         selectedFregment=new HistoryFragment() ;
+                        selectedFregment=new HistoryFragment() ;
                         transaction.replace( R.id.nav_host_fragment, selectedFregment);
                         transaction.addToBackStack(null);
                         transaction.commit();
                         break;
                     case R.id.drawOnMap:
-                        ArrayList<String> StartPoints = TripDao.getStartPoints();
-                        ArrayList<String> EndPoints = TripDao.getEndPoints();
+                        TripDao tripDao = new TripDao();
+                        ArrayList<String> StartPoints = tripDao.getStartPoints();
+                        Log.i("tag" , "StartPoints : "+StartPoints.size());
+                        ArrayList<String> EndPoints = tripDao.getEndPoints();
+                        Log.i("tag" , "EndPoints : "+EndPoints.size());
                         Intent intent = new Intent(context, MapsActivity.class);
                         startActivity(intent);
                         break;

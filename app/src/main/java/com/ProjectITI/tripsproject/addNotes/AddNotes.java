@@ -69,7 +69,8 @@ public class AddNotes extends AppCompatActivity {
 
         public void onClickSubmit(View v) {
             Log.i("tag", String.valueOf(newData));
-            TripDao.addNotes(trip_id , newData);
+            TripDao tripDao = new TripDao();
+            tripDao.addNotes(trip_id , newData);
             finish();
         }
 

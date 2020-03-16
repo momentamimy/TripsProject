@@ -54,11 +54,13 @@ public class Trip_alert extends AppCompatActivity {
                         // When the user click yes button
                         if(action.equals("delete")) {
                             String s = intent.getStringExtra("state");
-                            TripDao.deleteTrip(trip_id);
+                            TripDao tripDao = new TripDao();
+                            tripDao.deleteTrip(trip_id);
                            // TripDao.getAllData(s);
                         }else if(action.equals("cancel"))
                         {
-                            TripDao.cancelTrip(trip_id);
+                            TripDao tripDao = new TripDao();
+                            tripDao.cancelTrip(trip_id);
                           //  TripDao.getAllData("upcoming");
                         }else{
 

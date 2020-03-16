@@ -6,15 +6,16 @@ import com.ProjectITI.tripsproject.Model.TripDao;
 import java.util.ArrayList;
 
 public class addTripPresenter implements addTripContract.PresenterInterface {
-
+    TripDao tripDao ;
     addTripContract.ViewInterface view;
-    public addTripPresenter() {
 
+    public addTripPresenter(TripDao tripDao) {
+        this.tripDao = tripDao;
     }
 
     @Override
     public void addTrip(Trip trip) {
         ArrayList<String> empty_notes = new ArrayList<>();
-        TripDao.AddTrip(trip,empty_notes);
+        tripDao.AddTrip(trip,empty_notes);
     }
 }

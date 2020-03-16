@@ -24,14 +24,16 @@ import java.util.List;
 import java.util.Map;
 
 public class TripDao {
-    static Application application = HomeScreen.application;
-    private static DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-    static String userId = FirebaseAuth.getInstance().getUid();
+     Application application = HomeScreen.application;
+    private  DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+     String userId = FirebaseAuth.getInstance().getUid();
 
-    public static final ArrayList<String> start = new ArrayList<>();
-    public static final ArrayList<String> end = new ArrayList<>();
-
-    public static void AddTrip(Trip trip , ArrayList<String> notes)
+    public  static final ArrayList<String> start = new ArrayList<>();
+    public  static final ArrayList<String> end = new ArrayList<>();
+     final List<Trip> History = new ArrayList<>();
+     final List<Trip> UpcomingData = new ArrayList<>();
+     Boolean flag = false;
+    public  void AddTrip(Trip trip , ArrayList<String> notes)
     {
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         String key = mDatabase.child("Trips").child(userId).push().getKey();
@@ -40,7 +42,7 @@ public class TripDao {
 
         if(notes.size() !=0 || notes != null)
         {
-            TripDao.addNotes(key,notes);
+            addNotes(key,notes);
         }
         mDatabase.keepSynced(true);
 
@@ -58,15 +60,17 @@ public class TripDao {
          */
     }
 
-    public static void getAllData(final upcomingPresenter upcomingPresenter)
+    public  void getAllData(final upcomingPresenter upcomingPresenter)
     {
-        final List<Trip> UpcomingData = new ArrayList<>();
+        //flag = false;
         DatabaseReference newsRef = mDatabase.child("Trips").child(userId);
         newsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.i("tag","onDataChange upcoming data");
                   UpcomingData.clear();
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Log.i("tag","for in upcoming");
                     String name = ds.child("name").getValue(String.class);
                     String from = ds.child("from").getValue(String.class);
                     String to = ds.child("to").getValue(String.class);
@@ -98,8 +102,11 @@ public class TripDao {
                     }
                     if(status.equals("upcoming")) {
                         UpcomingData.add(new Trip(id, name, from, to, time, date, status, type, repeat, map));
+                        Log.i("tag","upcomind list : "+UpcomingData);
                     }
             }
+              //  flag = true;
+              //  Trip.UpcomingData = UpcomingData;
                 upcomingPresenter.setData(UpcomingData);
             }
             @Override
@@ -107,16 +114,19 @@ public class TripDao {
                 Log.i("tag", databaseError.getMessage());
             }
         });
+       // if (flag != true) {
             upcomingPresenter.setData(UpcomingData);
-
+      //  }
     }
-    public static void getHistoryData(final historyPresenter historyPresenter)
+    public  void getHistoryData(final historyPresenter historyPresenter)
     {
-        final List<Trip> History = new ArrayList<>();
+
         DatabaseReference newsRef = mDatabase.child("Trips").child(userId);
         newsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.i("tag","onDataChange History data");
+
                 History.clear();
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     String name = ds.child("name").getValue(String.class);
@@ -151,6 +161,8 @@ public class TripDao {
                     if (!status.equals("upcoming"))
                     History.add(new Trip(id,name, from, to, time, date, status, type, repeat,map));
                 }
+              //  flag = true;
+             //   Trip.HistoryData = History;
                 historyPresenter.setData(History);
             }
             @Override
@@ -158,10 +170,11 @@ public class TripDao {
                 Log.i("tag", databaseError.getMessage());
             }
         });
+      //  if(flag == false)
         historyPresenter.setData(History);
     }
 /*
-    public static void getAllData(final String trip_status)
+    public  void getAllData(final String trip_status)
     {
         final List<Trip> UpcomingData = new ArrayList<>();
         final List<Trip> HistoryData = new ArrayList<>();
@@ -234,7 +247,7 @@ public class TripDao {
         }
     }
 */
-    public static void deleteTrip( String tripId)
+    public  void deleteTrip( String tripId)
     {
         mDatabase = FirebaseDatabase.getInstance().getReference()
                 .child("Trips").child(userId).child(tripId);
@@ -242,14 +255,14 @@ public class TripDao {
 
     }
 
-    public static void cancelTrip (String tripId)
+    public  void cancelTrip (String tripId)
     {
         mDatabase = FirebaseDatabase.getInstance().getReference()
                 .child("Trips").child(userId).child(tripId);
         mDatabase.child("status").setValue("Cancel");
     }
 
-    public static void addNotes(String tripId , List<String> Notes )
+    public  void addNotes(String tripId , List<String> Notes )
     {
         mDatabase.child("Trips").child(userId).child(tripId).child("Notes").removeValue();
         for (int i=0 ; i<Notes.size() ; i++) {
@@ -257,7 +270,7 @@ public class TripDao {
         }
     }
 
-    public static void EditTrip (String id , Trip trip)
+    public  void EditTrip (String id , Trip trip)
     {
         String key = id;
         Log.i("tag","key od edit : "+key);
@@ -274,7 +287,7 @@ public class TripDao {
 
          */
     }
-    public static void DoneTrip (String tripId)
+    public  void DoneTrip (String tripId)
     {
         mDatabase = FirebaseDatabase.getInstance().getReference()
                 .child("Trips").child(userId).child(tripId);
@@ -282,7 +295,7 @@ public class TripDao {
     }
 
 /*
-    public static List<String> getTripNotes(String tripId)
+    public  List<String> getTripNotes(String tripId)
     {
         final List<String> Notes = new ArrayList<>();
         DatabaseReference newsRef = mDatabase.child("Notes").child(tripId);
@@ -299,7 +312,7 @@ public class TripDao {
         return null;
     }
 */
-public static ArrayList<String> getStartPoints()
+public  ArrayList<String> getStartPoints()
 {
   //  final ArrayList<String> start = new ArrayList<>();
     DatabaseReference ref = mDatabase.child("Trips").child(userId);
@@ -321,7 +334,7 @@ public static ArrayList<String> getStartPoints()
     return start;
 }
 
-    public static ArrayList<String> getEndPoints()
+    public  ArrayList<String> getEndPoints()
     {
         DatabaseReference ref = mDatabase.child("Trips").child(userId);
         ref.addValueEventListener(new ValueEventListener() {
