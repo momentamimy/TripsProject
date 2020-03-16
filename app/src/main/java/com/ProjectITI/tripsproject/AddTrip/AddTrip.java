@@ -76,8 +76,8 @@ public class AddTrip extends AppCompatActivity implements addTripContract.ViewIn
 
     String apiKey = "AIzaSyBHpF_TLWue13wvxHvbIqugSt_3LOa2Acw";
 
-    String start = "cairo";
-    String end = "ismailia";
+    String start = "";
+    String end = "";
 
     boolean DateIsSet=false;
     boolean TimeIsSet=false;
