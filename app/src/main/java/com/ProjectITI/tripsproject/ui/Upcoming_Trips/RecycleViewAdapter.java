@@ -44,8 +44,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> implements upcomingContract.ViewInterface {
-    private upcomingContract.PresenterInterface upcomingPresenter = new upcomingPresenter();
+public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder>  {
+  //  private upcomingContract.PresenterInterface upcomingPresenter = new upcomingPresenter(this);
 
     private final Context context;
     private List<Trip> values;
@@ -160,7 +160,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                     addNewTrip_RoundTrip(new_trip,notes);
                 }
                 String tripId = values.get(trip_position).getId();
-                upcomingPresenter.setTripDone(tripId);
+                TripDao.DoneTrip(tripId);
 
                 gotToMap(source, des);
                 // upcomingPresenter.getAllData();
@@ -237,7 +237,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         }
         // Trip trip = trip_name, start, end, time, date, status, trip_type, trip_repeat);
         ArrayList<String> notes2 = new ArrayList<>();
-        upcomingPresenter.addTrip(trip, notes);
+        TripDao.AddTrip(trip, notes);
         // upcomingPresenter.getAllData();
     }
     @Override
@@ -245,7 +245,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         return values.size();
     }
 
-    @Override
+
     public void cancel(String tripId) {
 
         Intent cancel = new Intent(context, Trip_alert.class);
@@ -255,7 +255,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         context.startActivity(cancel);
     }
 
-    @Override
+
     public void Notes(String tripid, ArrayList<String> notes) {
 
         Intent note = new Intent(context, AddNotes.class);
@@ -267,7 +267,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     }
 
 
-    @Override
+
     public void delete(String tripid) {
 
         Intent delete = new Intent(context, Trip_alert.class);
@@ -279,7 +279,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     }
 
-    @Override
+
     public void gotToMap(String source, String destiaion) {
 
         String uri = "http://maps.google.com/maps?f=d&hl=en&saddr=" + source + "&daddr=" + destiaion;
@@ -288,9 +288,14 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         context.startActivity(intent);
     }
 
-    @Override
+
     public void displayMessage(String msg) {
         Toast.makeText(context,msg,Toast.LENGTH_LONG).show();
+    }
+
+
+    public void setupcomingData(List<Trip> upcomingtrips) {
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

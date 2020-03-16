@@ -30,6 +30,7 @@ import com.ProjectITI.tripsproject.AddTrip.AddTrip;
 import com.ProjectITI.tripsproject.Alert.Trip_alert;
 import com.ProjectITI.tripsproject.Model.Trip;
 import com.ProjectITI.tripsproject.Model.TripDao;
+import com.ProjectITI.tripsproject.drawOnMap.MapsActivity;
 import com.ProjectITI.tripsproject.ui.Trips_History.HistoryFragment;
 import com.ProjectITI.tripsproject.ui.Upcoming_Trips.HomeFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -103,10 +104,16 @@ public class HomeScreen extends AppCompatActivity {
                         transaction.commit();
                         break;
                     case R.id.nav_History:
-                        selectedFregment=new HistoryFragment() ;
+                         selectedFregment=new HistoryFragment() ;
                         transaction.replace( R.id.nav_host_fragment, selectedFregment);
                         transaction.addToBackStack(null);
                         transaction.commit();
+                        break;
+                    case R.id.drawOnMap:
+                        ArrayList<String> StartPoints = TripDao.getStartPoints();
+                        ArrayList<String> EndPoints = TripDao.getEndPoints();
+                        Intent intent = new Intent(context, MapsActivity.class);
+                        startActivity(intent);
                         break;
                 }
                 drawer.closeDrawers();

@@ -8,7 +8,9 @@ import androidx.annotation.NonNull;
 
 import com.ProjectITI.tripsproject.HomeScreen;
 import com.ProjectITI.tripsproject.ui.Trips_History.HistoryFragment;
+import com.ProjectITI.tripsproject.ui.Trips_History.historyPresenter;
 import com.ProjectITI.tripsproject.ui.Upcoming_Trips.HomeFragment;
+import com.ProjectITI.tripsproject.ui.Upcoming_Trips.upcomingPresenter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,6 +27,9 @@ public class TripDao {
     static Application application = HomeScreen.application;
     private static DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     static String userId = FirebaseAuth.getInstance().getUid();
+
+    public static final ArrayList<String> start = new ArrayList<>();
+    public static final ArrayList<String> end = new ArrayList<>();
 
     public static void AddTrip(Trip trip , ArrayList<String> notes)
     {
@@ -53,20 +58,15 @@ public class TripDao {
          */
     }
 
-    public static void getAllData(final String trip_status)
+    public static void getAllData(final upcomingPresenter upcomingPresenter)
     {
         final List<Trip> UpcomingData = new ArrayList<>();
-        final List<Trip> HistoryData = new ArrayList<>();
-
         DatabaseReference newsRef = mDatabase.child("Trips").child(userId);
-
         newsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                   UpcomingData.clear();
-                    HistoryData.clear();
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Log.i("tag","for loop");
                     String name = ds.child("name").getValue(String.class);
                     String from = ds.child("from").getValue(String.class);
                     String to = ds.child("to").getValue(String.class);
@@ -97,12 +97,124 @@ public class TripDao {
                         map = new ArrayList<>();
                     }
                     if(status.equals("upcoming")) {
+                        UpcomingData.add(new Trip(id, name, from, to, time, date, status, type, repeat, map));
+                    }
+            }
+                upcomingPresenter.setData(UpcomingData);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.i("tag", databaseError.getMessage());
+            }
+        });
+            upcomingPresenter.setData(UpcomingData);
+
+    }
+    public static void getHistoryData(final historyPresenter historyPresenter)
+    {
+        final List<Trip> History = new ArrayList<>();
+        DatabaseReference newsRef = mDatabase.child("Trips").child(userId);
+        newsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                History.clear();
+                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    String name = ds.child("name").getValue(String.class);
+                    String from = ds.child("from").getValue(String.class);
+                    String to = ds.child("to").getValue(String.class);
+                    String status = ds.child("status").getValue(String.class);
+                    String time = ds.child("time").getValue(String.class);
+                    String date = ds.child("date").getValue(String.class);
+                    String type = ds.child("type").getValue(String.class);
+                    String repeat = ds.child("repeat").getValue(String.class);
+                    String id = ds.getKey();
+                    Map<String, String> td ;
+                    ArrayList<String> map;
+                    try {
+                        td = (HashMap<String, String>) ds.child("Notes").getValue();
+                        map = new ArrayList<>(td.values());
+                    }catch (Exception e)
+                    {
+                        td = new HashMap<>();
+                        map = new ArrayList<>();
+                    }
+                    if(map != null)
+                        for (int i = 0 ; i<map.size() ;i++)
+                        {
+                            if(map.get(i)==null)
+                            {
+                                map.remove(i);
+                            }
+                        }else{
+                        map = new ArrayList<>();
+                    }
+                    if (!status.equals("upcoming"))
+                    History.add(new Trip(id,name, from, to, time, date, status, type, repeat,map));
+                }
+                historyPresenter.setData(History);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.i("tag", databaseError.getMessage());
+            }
+        });
+        historyPresenter.setData(History);
+    }
+/*
+    public static void getAllData(final String trip_status)
+    {
+        final List<Trip> UpcomingData = new ArrayList<>();
+        final List<Trip> HistoryData = new ArrayList<>();
+        final ArrayList<String> start = new ArrayList<>();
+        final ArrayList<String> end = new ArrayList<>();
+
+        DatabaseReference newsRef = mDatabase.child("Trips").child(userId);
+
+        newsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UpcomingData.clear();
+                HistoryData.clear();
+                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Log.i("tag","for loop");
+                    String name = ds.child("name").getValue(String.class);
+                    String from = ds.child("from").getValue(String.class);
+                    String to = ds.child("to").getValue(String.class);
+                    String status = ds.child("status").getValue(String.class);
+                    String time = ds.child("time").getValue(String.class);
+                    String date = ds.child("date").getValue(String.class);
+                    String type = ds.child("type").getValue(String.class);
+                    String repeat = ds.child("repeat").getValue(String.class);
+                    String id = ds.getKey();
+                    Map<String, String> td ;
+                    ArrayList<String> map;
+                    try {
+                        td = (HashMap<String, String>) ds.child("Notes").getValue();
+                        map = new ArrayList<>(td.values());
+                    }catch (Exception e)
+                    {
+                        td = new HashMap<>();
+                        map = new ArrayList<>();
+                    }
+                    if(map != null)
+                        for (int i = 0 ; i<map.size() ;i++)
+                        {
+                            if(map.get(i)==null)
+                            {
+                                map.remove(i);
+                            }
+                        }else{
+                        map = new ArrayList<>();
+                    }
+                    if(status.equals("upcoming")) {
                         UpcomingData.add(new Trip(id,name, from, to, time, date, status, type, repeat,map));
                     }else{
+                        start.add(from);
+                        end.add(to);
                         HistoryData.add(new Trip(id,name, from, to, time, date, status, type, repeat,map));
                     }
 //twoice
-            }
+                }
                 if(trip_status.equals("upcoming")) {
                     HomeFragment.SetDataInRcycleView(UpcomingData);
                 }else if (trip_status.equals("allstatus")){
@@ -121,7 +233,7 @@ public class TripDao {
             HistoryFragment.SetDataInRcycleView(HistoryData);
         }
     }
-
+*/
     public static void deleteTrip( String tripId)
     {
         mDatabase = FirebaseDatabase.getInstance().getReference()
@@ -187,5 +299,47 @@ public class TripDao {
         return null;
     }
 */
+public static ArrayList<String> getStartPoints()
+{
+  //  final ArrayList<String> start = new ArrayList<>();
+    DatabaseReference ref = mDatabase.child("Trips").child(userId);
+    ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            start.clear();
+            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                String from = ds.child("from").getValue(String.class);
+                start.add(from);
+                //  String to = ds.child("to").getValue(String.class);
+            }
+        }
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            // Code
+        }
+    });
+    return start;
+}
 
+    public static ArrayList<String> getEndPoints()
+    {
+        DatabaseReference ref = mDatabase.child("Trips").child(userId);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                end.clear();
+                Log.i("tag","onDataChange");
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    String to = ds.child("to").getValue(String.class);
+                    Log.i("tag","to : "+to);
+                    end.add(to);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Code
+            }
+        });
+        return end;
+    }
 }

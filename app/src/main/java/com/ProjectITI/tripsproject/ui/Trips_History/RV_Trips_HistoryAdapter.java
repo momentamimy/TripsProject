@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,7 +26,7 @@ import com.ProjectITI.tripsproject.Notes.showNotes;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RV_Trips_HistoryAdapter extends RecyclerView.Adapter<RV_Trips_HistoryAdapter.ViewHolder> implements historyContract.ViewInterface {
+public class RV_Trips_HistoryAdapter extends RecyclerView.Adapter<RV_Trips_HistoryAdapter.ViewHolder>  {
     private Context context;
     private List<Trip> values;
     LayoutInflater layoutInflater;
@@ -95,7 +96,7 @@ public class RV_Trips_HistoryAdapter extends RecyclerView.Adapter<RV_Trips_Histo
         return values.size();
     }
 
-    @Override
+
     public void showNotes(ArrayList<String> trip_notes) {
         Intent intent = new Intent(context, showNotes.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
@@ -104,7 +105,7 @@ public class RV_Trips_HistoryAdapter extends RecyclerView.Adapter<RV_Trips_Histo
         context.startActivity(intent);
     }
 
-    @Override
+
     public void delete(String tripid) {
         Intent intent = new Intent(context, Trip_alert.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -115,6 +116,8 @@ public class RV_Trips_HistoryAdapter extends RecyclerView.Adapter<RV_Trips_Histo
         context.startActivity(intent);
 
     }
+
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public View view;

@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryFragment extends Fragment {
+public class HistoryFragment extends Fragment  implements historyContract.ViewInterface{
     private historyContract.PresenterInterface presenterInterface;
     public static Context context = HomeScreen.context;
     public String userId = FirebaseAuth.getInstance().getUid();
@@ -40,53 +41,49 @@ public class HistoryFragment extends Fragment {
         noTrips = root.findViewById(R.id.history_no_trips_layout);
         recyclerView = (RecyclerView) root.findViewById(R.id.history_recycleView_id);
 
-        presenterInterface = new historyPresenter();
+//        presenterInterface = new historyPresenter();
        // presenterInterface.getAllData();
         return root;
-    }
-
-    public static void SetDataInRcycleView(List<Trip> newData) {
-
-        recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(context);
-        recyclerView.setLayoutManager(layoutManager);
-
-        if (newData.size() == 0) {
-            noTrips.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.INVISIBLE);
-        } else {
-            noTrips.setVisibility(View.INVISIBLE);
-            recyclerView.setVisibility(View.VISIBLE);
-            mAdapter = new RV_Trips_HistoryAdapter(context, newData);
-            recyclerView.setAdapter(mAdapter);
-        }
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.i("tag","onPause");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.i("tag","onResume");
-       // TripDao.getAllData("allStatus");
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        historyPresenter main = new historyPresenter(this);
+        main.getHistoryList();
+    }
 
-       presenterInterface.getAllData();
+
+
+    @Override
+    public void Notes(String tripid, ArrayList<String> notes) {
+
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.i("tag","onCreate(@Nullable Bundle savedInstanceState) ");
+    public void displayMessage(String msg) {
+        Toast.makeText(context,msg,Toast.LENGTH_LONG).show();
+    }
 
+    @Override
+    public void setHistoryData(List<Trip> upcomingtrips) {
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(layoutManager);
+
+        if (upcomingtrips.size() == 0) {
+            NoHistoryTrips();
+        } else {
+            noTrips.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
+            mAdapter = new RV_Trips_HistoryAdapter(context, upcomingtrips);
+            recyclerView.setAdapter(mAdapter);
+        }
+    }
+
+    @Override
+    public void NoHistoryTrips() {
+        noTrips.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.INVISIBLE);
     }
 }

@@ -3,25 +3,30 @@ package com.ProjectITI.tripsproject.ui.Upcoming_Trips;
 import com.ProjectITI.tripsproject.Model.Trip;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public interface upcomingContract {
     interface PresenterInterface {
-        void addTrip(Trip trip , ArrayList<String> notes);
-        void setTripDone(String id);
-        void getAllData();
+
+        void getupcomingList();
+
+        void setData(List<Trip> trips);
+
+        void onDelete(String tripId);
+
+        void stop();
     }
 
     interface ViewInterface {
 
-        void cancel(String tripId);
-
         void Notes(String tripid, ArrayList<String> notes);
 
-        void delete(String tripid);
-
-        void gotToMap(String source , String destiaion);
-
         void displayMessage(String msg);
+
+        void setupcomingData(List<Trip> upcomingtrips);
+
+        void NoupcomingTrips();
 
     }
 }

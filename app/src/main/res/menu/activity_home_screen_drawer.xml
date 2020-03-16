@@ -12,6 +12,10 @@
             android:id="@+id/nav_History"
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/menu_upcoming" />
+        <item
+            android:id="@+id/drawOnMap"
+            android:icon="@drawable/ic_route"
+            android:title="Draw History Trips" />
 
     </group>
 

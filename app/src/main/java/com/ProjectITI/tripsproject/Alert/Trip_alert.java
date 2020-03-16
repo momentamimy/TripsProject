@@ -61,6 +61,7 @@ public class Trip_alert extends AppCompatActivity {
                             TripDao.cancelTrip(trip_id);
                           //  TripDao.getAllData("upcoming");
                         }else{
+
                             /*
                             SharedPreferences.Editor editor = getSharedPreferences("USER", MODE_PRIVATE).edit();
                             editor.putString("name", "");
