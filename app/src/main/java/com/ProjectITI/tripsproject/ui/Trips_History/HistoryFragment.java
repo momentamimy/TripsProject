@@ -35,11 +35,13 @@ public class HistoryFragment extends Fragment  implements historyContract.ViewIn
     private static RecyclerView.LayoutManager layoutManager;
     private static View noTrips;
 
+    private TripDao tripDao;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_gallery, container, false);
         noTrips = root.findViewById(R.id.history_no_trips_layout);
         recyclerView = (RecyclerView) root.findViewById(R.id.history_recycleView_id);
+        tripDao = new TripDao();
 
 //        presenterInterface = new historyPresenter();
        // presenterInterface.getAllData();
@@ -49,7 +51,7 @@ public class HistoryFragment extends Fragment  implements historyContract.ViewIn
     @Override
     public void onStart() {
         super.onStart();
-        historyPresenter main = new historyPresenter(this);
+        historyPresenter main = new historyPresenter(this,tripDao);
         main.getHistoryList();
     }
 

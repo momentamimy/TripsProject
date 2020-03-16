@@ -53,10 +53,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
 
-
         StartPoints = TripDao.start;
         EndPoints = TripDao.end;
+        Log.i("tag","-----------");
+        Log.i("tag","EndPoints" + EndPoints.size());
 
+        Log.i("tag","StartPoints" + StartPoints.size());
         if (StartPoints == null || EndPoints == null || StartPoints.size() == 0 || EndPoints.size() == 0) {
             Toast.makeText(getApplicationContext(), "No Avilabe trips ! PLease try again", Toast.LENGTH_LONG).show();
         } else {

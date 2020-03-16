@@ -51,7 +51,7 @@ import java.util.Arrays;
 
 public class AddTrip extends AppCompatActivity implements addTripContract.ViewInterface {
 
-
+    private TripDao tripDao;
     private addTripContract.PresenterInterface addTripPresenter;
     private TextView timeSelected;
     private ImageView timePicker;
@@ -76,8 +76,8 @@ public class AddTrip extends AppCompatActivity implements addTripContract.ViewIn
 
     String apiKey = "AIzaSyBHpF_TLWue13wvxHvbIqugSt_3LOa2Acw";
 
-    String start = "";
-    String end = "";
+    String start = "cairo";
+    String end = "ismailia";
 
     boolean DateIsSet=false;
     boolean TimeIsSet=false;
@@ -88,7 +88,9 @@ public class AddTrip extends AppCompatActivity implements addTripContract.ViewIn
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_trip);
 
-        addTripPresenter = new addTripPresenter() ;
+        tripDao = new TripDao();
+
+        addTripPresenter = new addTripPresenter(tripDao) ;
 
         setUpComponents();
 

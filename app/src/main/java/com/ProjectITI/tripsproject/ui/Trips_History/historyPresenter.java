@@ -8,14 +8,16 @@ import java.util.List;
 public class historyPresenter implements historyContract.PresenterInterface  {
 
     historyContract.ViewInterface view;
+    TripDao tripDao;
 
-    public historyPresenter(historyContract.ViewInterface view) {
+    public historyPresenter(historyContract.ViewInterface view, TripDao tripDao) {
         this.view = view;
+        this.tripDao = tripDao;
     }
 
     @Override
     public void getHistoryList() {
-        TripDao.getHistoryData(this);
+        tripDao.getHistoryData(this);
     }
 
     @Override
@@ -25,7 +27,8 @@ public class historyPresenter implements historyContract.PresenterInterface  {
 
     @Override
     public void onDelete(String tripId) {
-        TripDao.deleteTrip(tripId);
+        tripDao.deleteTrip(tripId);
+       // getHistoryList();
     }
 
     @Override

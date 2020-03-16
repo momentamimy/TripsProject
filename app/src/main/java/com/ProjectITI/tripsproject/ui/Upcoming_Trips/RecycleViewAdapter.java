@@ -160,7 +160,8 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                     addNewTrip_RoundTrip(new_trip,notes);
                 }
                 String tripId = values.get(trip_position).getId();
-                TripDao.DoneTrip(tripId);
+                TripDao tripDao = new TripDao();
+                tripDao.DoneTrip(tripId);
 
                 gotToMap(source, des);
                 // upcomingPresenter.getAllData();
@@ -178,7 +179,8 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         trip.setFrom(start);
         trip.setTo(end);
 
-        TripDao.AddTrip(trip, notes,Calendar.getInstance());
+        TripDao tripDao = new TripDao();
+        tripDao.AddTrip(trip, notes,Calendar.getInstance());
 
 
 
@@ -200,7 +202,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
 
     private void addNewTrip_Reapet(String repeat, Trip trip, ArrayList<String> notes) {
-        String newDate;
+        String newDate = "";
         Date trip_date;
         Calendar cal = Calendar.getInstance();
 
@@ -221,23 +223,56 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
         if (repeat.equals("Repeat Weekly")) {
 
+            int days = day + 7;
+            if(days>31)
+            {
+                int num = day + 7 - 31 ;
+                int newMonth = Month + 1;
+                if(newMonth >12)
+                {
+                    newDate = num + "/" + 1 + "/" + year+1;
+                }else{
+                    newDate = num + "/" + newMonth + "/" + year;
+                }
 
-            newDate = (day + 7) + "/" + Month + "/" + year;
+            }else{
+                newDate = (day + 7) + "/" + Month + "/" + year;
+            }
             trip.setDate(newDate);
 
         } else if (repeat.equals("Repeat Daily")) {
 
-            newDate = (day + 1) + "/" + Month + "/" + year;
+            int num = day +1;
+            if(num >31)
+            {
+                int newMonth = Month + 1;
+                if(newMonth >12)
+                {
+                    newDate = 1 + "/" + 1 + "/" + year+1;
+
+                }else{
+                    newDate = 1 + "/" + newMonth + "/" + year;
+                }
+            }else{
+                newDate = (day + 1) + "/" + Month + "/" + year;
+            }
             trip.setDate(newDate);
 
         } else if (repeat.equals("Repeat Monthly")) {
 
-            newDate = day + "/" + (Month + 1) + "/" + year;
+            int newMonth = Month+1;
+            if(newMonth >12)
+            {
+                newDate = day + "/" + 1 + "/" + year+1;
+            }else{
+                newDate = day + "/" + (Month + 1) + "/" + year;
+            }
             trip.setDate(newDate);
         }
         // Trip trip = trip_name, start, end, time, date, status, trip_type, trip_repeat);
         ArrayList<String> notes2 = new ArrayList<>();
-        TripDao.AddTrip(trip, notes);
+        TripDao tripDao = new TripDao();
+        tripDao.AddTrip(trip, notes);
         // upcomingPresenter.getAllData();
     }
     @Override

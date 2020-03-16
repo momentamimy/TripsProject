@@ -10,6 +10,7 @@ public class updateTripPresenter implements updateTripContract.PresenterInterfac
 
     @Override
     public void updateTrip(String id ,Trip trip) {
-        TripDao.EditTrip(id,trip);
+        TripDao tripDao = new TripDao();
+        tripDao.EditTrip(id,trip);
     }
 }

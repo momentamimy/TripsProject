@@ -1,9 +1,13 @@
 package com.ProjectITI.tripsproject.Model;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class Trip {
+
+  //  public static  List<Trip> UpcomingData = new ArrayList<>();
+//    public static  List<Trip> HistoryData = new ArrayList<>();
 
     public Trip(String name, String from, String to, String time, String date, String status, String type, String repeat) {
         Name = name;

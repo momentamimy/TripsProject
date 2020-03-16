@@ -40,21 +40,24 @@ public class HomeFragment extends Fragment implements upcomingContract.ViewInter
     private static RecyclerView.LayoutManager layoutManager;
     private List<Trip> input = new ArrayList<>();
     private static LinearLayout noTrips;
-    static List<Trip> newData = new ArrayList<>();;
+    static List<Trip> newData = new ArrayList<>();
+
+    TripDao tripDao;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         noTrips = root.findViewById(R.id.no_trips_layout);
         v = (RecyclerView) root.findViewById(R.id.recycleView_id);
        // presenterInterface = new upcomingPresenter(getView());
-
+        tripDao = new TripDao();
         return root;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        upcomingPresenter main = new upcomingPresenter(this);
+        Log.i("tag" , "onStart HomeFragment");
+        upcomingPresenter main = new upcomingPresenter(this,tripDao);
         main.getupcomingList();
     }
 

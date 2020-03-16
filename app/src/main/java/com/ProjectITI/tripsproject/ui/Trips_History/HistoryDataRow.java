@@ -1,7 +1,7 @@
 package com.ProjectITI.tripsproject.ui.Trips_History;
 
 public class HistoryDataRow {
-
+/*
     public String TripName;
     private String From;
     private String To;
@@ -45,5 +45,5 @@ public class HistoryDataRow {
 
     public String getStatus() {
         return status;
-    }
+    }*/
 }

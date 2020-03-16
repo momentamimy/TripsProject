@@ -7,15 +7,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class addTripPresenter implements addTripContract.PresenterInterface {
-
+    TripDao tripDao ;
     addTripContract.ViewInterface view;
-    public addTripPresenter() {
 
+    public addTripPresenter(TripDao tripDao) {
+        this.tripDao = tripDao;
     }
 
     @Override
-    public String  addTrip(Trip trip, Calendar calendar) {
+    public void   addTrip(Trip trip, Calendar calendar) {
         ArrayList<String> empty_notes = new ArrayList<>();
-        return TripDao.AddTrip(trip,empty_notes,calendar);
+        TripDao.AddTrip(trip,empty_notes,calendar);
     }
 }
