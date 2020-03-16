@@ -23,7 +23,7 @@
     <item name="contentPaddingTop">@dimen/dp_double</item>
     <item name="contentPaddingLeft">@dimen/dp_double</item>
     <item name="contentPaddingRight">@dimen/dp_double</item>
-    <item name="cardBackgroundColor">@color/backgroundLight</item>
+    <item name="cardBackgroundColor">@color/backgroundLightBlue</item>
   </style>
 
 
@@ -41,5 +41,14 @@
     <item name="windowNoTitle">true</item>
     <item name="android:windowIsTranslucent">true</item>
     <item name="android:windowCloseOnTouchOutside">true</item>
+  </style>
+
+  <style name="Theme.Transparent" parent="AppTheme">
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:windowContentOverlay">@null</item>
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowIsFloating">true</item>
+    <item name="android:backgroundDimEnabled">false</item>
   </style>
 </resources>

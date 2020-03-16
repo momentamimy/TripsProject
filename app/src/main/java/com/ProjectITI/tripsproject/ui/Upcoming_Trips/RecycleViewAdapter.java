@@ -178,7 +178,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         trip.setFrom(start);
         trip.setTo(end);
 
-        TripDao.AddTrip(trip, notes);
+        TripDao.AddTrip(trip, notes,Calendar.getInstance());
 
 
 

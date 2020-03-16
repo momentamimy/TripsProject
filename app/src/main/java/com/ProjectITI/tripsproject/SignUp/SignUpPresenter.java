@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.Window;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
@@ -37,7 +38,7 @@ public class SignUpPresenter implements SignUpContract.PresenterInterface{
         this.activity=activity;
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
-
+        loadingDialog = new Dialog(activity);
     }
 
     @Override
@@ -54,6 +55,7 @@ public class SignUpPresenter implements SignUpContract.PresenterInterface{
                             databaseReference.child("users").child(user.getUid()).child("Email").setValue(email);
                             databaseReference.child("users").child(user.getUid()).child("UserName").setValue(userName);
                             databaseReference.child("users").child(user.getUid()).child("Password").setValue(pass);
+                            databaseReference.child("users").child(user.getUid()).child("TripsCount").setValue(0);
 
                             Toast.makeText(activity, "Registered Succesfully",Toast.LENGTH_SHORT).show();
                         } else {
@@ -80,6 +82,9 @@ public class SignUpPresenter implements SignUpContract.PresenterInterface{
         Window window = loadingDialog.getWindow();
         window.setLayout(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
         loadingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView progressMsg = loadingDialog.findViewById(R.id.progress_message);
+        progressMsg.setText("SIGNING UP ...");
 
         RotateLoading rotateLoading;
         rotateLoading = loadingDialog.findViewById(R.id.rotateloading);

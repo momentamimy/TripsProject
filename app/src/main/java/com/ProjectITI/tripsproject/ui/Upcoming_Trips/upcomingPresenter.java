@@ -5,6 +5,7 @@ import com.ProjectITI.tripsproject.Model.TripDao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Calendar;
 
 public class upcomingPresenter implements upcomingContract.PresenterInterface {
 
@@ -15,6 +16,10 @@ public class upcomingPresenter implements upcomingContract.PresenterInterface {
     public upcomingPresenter(upcomingContract.ViewInterface view) {
         this.view = view;
     }
+
+    @Override
+    public void addTrip(Trip trip , ArrayList<String> notes,Calendar calendar) {
+        TripDao.AddTrip(trip,notes,calendar);
 
     @Override
     public void getupcomingList() {

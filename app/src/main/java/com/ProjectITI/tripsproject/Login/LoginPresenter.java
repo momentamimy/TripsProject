@@ -1,12 +1,19 @@
 package com.ProjectITI.tripsproject.Login;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
+import android.view.Window;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 
+import com.ProjectITI.tripsproject.R;
 import com.facebook.AccessToken;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.ProjectITI.tripsproject.HomeScreen;
@@ -23,6 +30,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.victor.loading.rotate.RotateLoading;
 
 public class LoginPresenter implements LoginContract.PresenterInterface{
 
@@ -32,16 +40,19 @@ public class LoginPresenter implements LoginContract.PresenterInterface{
     public DatabaseReference databaseReference;
     public String userId ;
 
+    Dialog loadingDialog;
 
     public LoginPresenter(LoginContract.ViewInterface viewInterface, Activity activity) {
         this.viewInterface = viewInterface;
         this.activity = activity;
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        loadingDialog = new Dialog(activity);
     }
 
     @Override
     public void Login(final String email, final String pass) {
+        MyCustomDialog();
         mAuth.signInWithEmailAndPassword(email,pass).addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -56,15 +67,17 @@ public class LoginPresenter implements LoginContract.PresenterInterface{
                                 Log.v("tag",mAuth.getUid());
                                 viewInterface.LoginSucceed(email,pass,dataSnapshot.getValue(String.class));
                             }
+                            loadingDialog.dismiss();
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                            loadingDialog.dismiss();
                         }
                     });
                 }
                 else
                 {
+                    loadingDialog.dismiss();
                     Toast.makeText(activity,"Failed",Toast.LENGTH_LONG).show();
                 }
             }
@@ -74,7 +87,7 @@ public class LoginPresenter implements LoginContract.PresenterInterface{
     @Override
     public void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d("GoogleAccount", "firebaseAuthWithGoogle:" + acct.getId());
-
+        MyCustomDialog();
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
@@ -95,6 +108,7 @@ public class LoginPresenter implements LoginContract.PresenterInterface{
                             Toast.makeText(activity, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
+                        loadingDialog.dismiss();
                     }
                 });
     }
@@ -102,7 +116,7 @@ public class LoginPresenter implements LoginContract.PresenterInterface{
     @Override
     public void handleFacebookAccessToken(AccessToken token) {
         Log.d("FacebookAccessToken: ",   token.toString());
-
+        MyCustomDialog();
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
@@ -123,7 +137,25 @@ public class LoginPresenter implements LoginContract.PresenterInterface{
                             Toast.makeText(activity, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
+                        loadingDialog.dismiss();
                     }
                 });
+    }
+
+    public void MyCustomDialog() {
+        loadingDialog = new Dialog(activity);
+        loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        loadingDialog.setContentView(R.layout.loading_dialog);
+        Window window = loadingDialog.getWindow();
+        window.setLayout(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
+        loadingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView progressMsg = loadingDialog.findViewById(R.id.progress_message);
+        progressMsg.setText("Login ...");
+
+        RotateLoading rotateLoading;
+        rotateLoading = loadingDialog.findViewById(R.id.rotateloading);
+        rotateLoading.start();
+        loadingDialog.show();
     }
 }

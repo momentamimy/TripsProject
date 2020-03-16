@@ -5,9 +5,13 @@ import com.ProjectITI.tripsproject.Model.Trip;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Calendar;
 
 public interface upcomingContract {
     interface PresenterInterface {
+        void addTrip(Trip trip , ArrayList<String> notes, Calendar calendar);
+        void setTripDone(String id);
+        void getAllData();
 
         void getupcomingList();
 

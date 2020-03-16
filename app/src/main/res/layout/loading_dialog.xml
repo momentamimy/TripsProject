@@ -6,25 +6,24 @@
     android:layout_margin="20dp"
     app:cardCornerRadius="10dp"
     app:cardElevation="5dp"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-    <RelativeLayout
-        android:layout_width="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_below="@+id/rotateloading"
-            android:layout_margin="20dp"
             android:padding="10dp"
+            android:background="@color/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="SIGNING UP ..."
-            android:textSize="25dp"
-            android:textColor="@color/colorPrimary"
-            android:gravity="center"
-            android:background="@drawable/login_edittext_style"
-            />
+            android:text="please wait for"
+            android:textColor="#fff"
+            android:textSize="25sp"/>
 
         <com.victor.loading.rotate.RotateLoading
+            android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:id="@+id/rotateloading"
             android:layout_width="80dp"
@@ -32,5 +31,19 @@
             app:loading_width="5dp"
             app:loading_color="@color/colorPrimary"
             android:layout_centerHorizontal="true"/>
-    </RelativeLayout>
+
+        <TextView
+            android:id="@+id/progress_message"
+            android:layout_margin="20dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="25dp"
+            android:textColor="@color/colorPrimary"
+            android:gravity="center"
+            android:background="@drawable/login_edittext_style"
+            />
+
+
+    </LinearLayout>
 </androidx.cardview.widget.CardView>

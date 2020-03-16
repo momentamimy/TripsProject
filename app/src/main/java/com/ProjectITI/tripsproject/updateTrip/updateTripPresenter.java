@@ -1,6 +1,5 @@
 package com.ProjectITI.tripsproject.updateTrip;
 
-import com.ProjectITI.tripsproject.AddTrip.addTripContract;
 import com.ProjectITI.tripsproject.Model.Trip;
 import com.ProjectITI.tripsproject.Model.TripDao;
 

@@ -1,11 +1,17 @@
 package com.ProjectITI.tripsproject.Model;
 
 
+import android.app.AlarmManager;
 import android.app.Application;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.ProjectITI.tripsproject.AlertReceiver;
 import com.ProjectITI.tripsproject.HomeScreen;
 import com.ProjectITI.tripsproject.ui.Trips_History.HistoryFragment;
 import com.ProjectITI.tripsproject.ui.Trips_History.historyPresenter;
@@ -19,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,31 +38,50 @@ public class TripDao {
     public static final ArrayList<String> start = new ArrayList<>();
     public static final ArrayList<String> end = new ArrayList<>();
 
-    public static void AddTrip(Trip trip , ArrayList<String> notes)
+    public static String AddTrip(final Trip trip , ArrayList<String> notes, final Calendar calendar)
     {
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        String key = mDatabase.child("Trips").child(userId).push().getKey();
+        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        final String key = mDatabase.child("Trips").child(userId).push().getKey();
         Log.i("tag" , " key : "+key);
-        mDatabase.child("Trips").child(userId).child(key).setValue(trip);
+        //mDatabase.child("Trips").child(userId).child(key).setValue(trip);
 
         if(notes.size() !=0 || notes != null)
         {
             TripDao.addNotes(key,notes);
         }
         mDatabase.keepSynced(true);
+        mDatabase.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mDatabase.child("Trips").child(userId).child(key).child("status").setValue(trip.getStatus());
+                mDatabase.child("Trips").child(userId).child(key).child("time").setValue(trip.getTime());
+                mDatabase.child("Trips").child(userId).child(key).child("date").setValue(trip.getDate());
+                mDatabase.child("Trips").child(userId).child(key).child("name").setValue(trip.getName());
+                mDatabase.child("Trips").child(userId).child(key).child("from").setValue(trip.getFrom());
+                mDatabase.child("Trips").child(userId).child(key).child("to").setValue(trip.getTo());
+                mDatabase.child("Trips").child(userId).child(key).child("type").setValue(trip.getType());
+                mDatabase.child("Trips").child(userId).child(key).child("repeat").setValue(trip.getRepeat());
 
 
-        /*
-        mDatabase.child("Trips").child(userId).child(key).child("time").setValue(trip.getTime());
-        mDatabase.child("Trips").child(userId).child(key).child("date").setValue(trip.getDate());
-        mDatabase.child("Trips").child(userId).child(key).child("name").setValue(trip.getName());
-        mDatabase.child("Trips").child(userId).child(key).child("from").setValue(trip.getFrom());
-        mDatabase.child("Trips").child(userId).child(key).child("to").setValue(trip.getTo());
-        mDatabase.child("Trips").child(userId).child(key).child("status").setValue(trip.getStatus());
-        mDatabase.child("Trips").child(userId).child(key).child("type").setValue(trip.getType());
-        mDatabase.child("Trips").child(userId).child(key).child("repeat").setValue(trip.getRepeat());
+                int request = dataSnapshot.child("TripsCount").getValue(Integer.class);
+                startAlarm(trip,calendar,key,request);
+                mDatabase.child("Trips").child(userId).child(key).child("alarm request").setValue(request);
 
-         */
+                request++;
+                mDatabase.child("users").child(userId).child("TripsCount").setValue(request);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
+        return key;
     }
 
     public static void getAllData(final upcomingPresenter upcomingPresenter)
@@ -341,5 +367,25 @@ public static ArrayList<String> getStartPoints()
             }
         });
         return end;
+    }
+    private static void startAlarm(Trip trip, Calendar c, String key, int request) {
+        AlarmManager alarmManager = (AlarmManager) application.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(application, AlertReceiver.class);
+        intent.putExtra("name",trip.getName());
+        intent.putExtra("from",trip.getFrom());
+        intent.putExtra("to",trip.getTo());
+        intent.putExtra("type",trip.getType());
+        intent.putExtra("repeat",trip.getRepeat());
+        intent.putExtra("key",key);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(application, request, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        }
+        else
+        {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        }
     }
 }

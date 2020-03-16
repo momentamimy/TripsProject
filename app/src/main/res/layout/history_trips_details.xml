@@ -6,7 +6,7 @@
     style="@style/MyCardViewStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/dp_single"
+    android:layout_margin="20dp"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground">
@@ -28,15 +28,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/history_imageView_id"
-                android:layout_width="302dp"
+                android:layout_width="wrap_content"
                 android:layout_height="106dp"
-                android:src="@drawable/ic_travel"
+                android:src="@drawable/ic_route"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/history_trip_name" />
 
@@ -44,6 +45,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
+            android:textColor="@color/colorPrimaryDark"
             android:id="@+id/history_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -203,7 +205,7 @@
             android:layout_height="29dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/glory_button"
             android:text="Show Notes"
             android:textColor="@color/backgroundWhite"
             android:textSize="14sp" />
@@ -212,7 +214,7 @@
             android:id="@+id/history_Delete"
             android:layout_width="match_parent"
             android:layout_height="29dp"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/glory_button"
             android:text="Delete Trip"
             android:textColor="@color/backgroundWhite"
             android:textSize="14sp" />

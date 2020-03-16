@@ -4,6 +4,7 @@
   <color name="colorPrimaryLight">#439889</color>
   <color name="colorAccent">#B53700</color>
   <color name="backgroundLight">#dcc6e0</color>
+  <color name="backgroundLightBlue">#F6FAFD</color>
   <color name="backgroundMedium">#FBFBFB</color>
   <color name="backgroundWhite">#FFFFFF</color>
 

@@ -37,6 +37,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -60,6 +61,9 @@ public class LoginFragment extends Fragment implements LoginContract.ViewInterfa
 
     EditText EmailEditText;
     EditText PassEditText;
+
+    TextInputLayout EmailInputLayout;
+    TextInputLayout PassInputLayout;
 
     Button loginButton;
 
@@ -93,6 +97,8 @@ public class LoginFragment extends Fragment implements LoginContract.ViewInterfa
 
         EmailEditText = view.findViewById(R.id.Email);
         PassEditText = view.findViewById(R.id.Password);
+        EmailInputLayout = view.findViewById(R.id.input_layout_Email);
+        PassInputLayout = view.findViewById(R.id.input_layout_Password);
         loginButton = view.findViewById(R.id.Login);
         signUpButton = view.findViewById(R.id.SignUpActivity);
         loginButtonGmail = view.findViewById(R.id.login_button_gmail);
@@ -115,7 +121,18 @@ public class LoginFragment extends Fragment implements LoginContract.ViewInterfa
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenterInterface.Login(EmailEditText.getText().toString(),PassEditText.getText().toString());
+                if (EmailEditText.getText().toString().isEmpty())
+                {
+                    EmailInputLayout.setError("fill Email");
+                }
+                else if (PassEditText.getText().toString().isEmpty())
+                {
+                    PassInputLayout.setError("fill Password");
+                }
+                else
+                {
+                    presenterInterface.Login(EmailEditText.getText().toString(),PassEditText.getText().toString());
+                }
             }
         });
 
@@ -168,6 +185,7 @@ public class LoginFragment extends Fragment implements LoginContract.ViewInterfa
         editor.putString("name", userName);
         editor.commit();
         startActivity(new Intent(getContext(), HomeScreen.class));
+        getActivity().finish();
     }
 
     @Override
