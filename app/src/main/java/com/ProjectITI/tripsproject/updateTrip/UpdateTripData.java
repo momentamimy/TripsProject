@@ -61,7 +61,10 @@ public class UpdateTripData extends AppCompatActivity implements TimePickerDialo
     String tripID ;
     int minDay, minYear, minMonth;
     int selected_year, selected_day, selected_Month;
-    
+
+    String start = "";
+    String end = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,8 +131,8 @@ public class UpdateTripData extends AppCompatActivity implements TimePickerDialo
                     @Override
                     public void onPlaceSelected(Place place) {
                         final LatLng latLng = place.getLatLng();
-
-                        Toast.makeText(UpdateTripData.this, ""+latLng.latitude, Toast.LENGTH_SHORT).show();
+                        start = place.getAddress();
+                       // Toast.makeText(UpdateTripData.this, ""+latLng.latitude, Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -148,8 +151,8 @@ public class UpdateTripData extends AppCompatActivity implements TimePickerDialo
                     @Override
                     public void onPlaceSelected(Place place) {
                         final LatLng latLng = place.getLatLng();
-
-                        Toast.makeText(UpdateTripData.this, ""+latLng.latitude, Toast.LENGTH_SHORT).show();
+                        end = place.getAddress();
+                       // Toast.makeText(UpdateTripData.this, ""+latLng.latitude, Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -192,7 +195,9 @@ public class UpdateTripData extends AppCompatActivity implements TimePickerDialo
         timeSelected.setText(intent.getStringExtra("time"));
         dateSelected.setText(intent.getStringExtra("date"));
         autocompleteStartPointFragment.setText(intent.getStringExtra("startPoint"));
+        start = intent.getStringExtra("startPoint");
         autocompleteEndPointFragment.setText(intent.getStringExtra("endPoint"));
+        end = intent.getStringExtra("endPoint");
         String tripRepeat = (intent.getStringExtra("repeat"));
        // No Repeat, Repeat Daily, Repeat Weekly, Repeat Monthly
         if(tripRepeat.equals("No Repeat"))
@@ -251,23 +256,27 @@ public class UpdateTripData extends AppCompatActivity implements TimePickerDialo
 
     public void updateTripClick(View view) {
         updateTrip();
-        returnToMain();
+
 
     }
     public void updateTrip(){
-        String trip_name = tripName.getText().toString();
-        String from = "from test"; //autocompleteStartPointFragment.getText().toString();
-        String to = "test test";
-        String time = timeSelected.getText().toString();
-        String date = dateSelected.getText().toString();
-        String trip_repeat = repeat.getSelectedItem().toString();
-        String status = "upcoming";
-        String trip_type = type.getSelectedItem().toString();
-        //Trip(String name, String from, String to, String time, String date, String status, String type, String repeat) {
-        //public Trip(String id, String name, String from, String to, String time, String date, String status, String type, String repeat, ArrayList<String> notes) {
+        if (tripName.getText().toString().equals("") || timeSelected.getText().toString().equals("") || dateSelected.getText().toString().equals("") || start.equals("") || end.equals("")) {
 
-        Trip trip = new Trip(trip_name, from, to, time, date, status, trip_type, trip_repeat);
-        updateTripPresenter.updateTrip(tripID , trip);
+            displayMessage("Please Fill Empty Fields");
+
+        } else {
+            String trip_name = tripName.getText().toString();
+            String time = timeSelected.getText().toString();
+            String date = dateSelected.getText().toString();
+            String trip_repeat = repeat.getSelectedItem().toString();
+            String status = "upcoming";
+            String trip_type = type.getSelectedItem().toString();
+            //Trip(String name, String from, String to, String time, String date, String status, String type, String repeat) {
+            //public Trip(String id, String name, String from, String to, String time, String date, String status, String type, String repeat, ArrayList<String> notes) {
+            Trip trip = new Trip(trip_name, start, end, time, date, status, trip_type, trip_repeat);
+            updateTripPresenter.updateTrip(tripID, trip);
+            returnToMain();
+        }
 
     }
 

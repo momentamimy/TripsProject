@@ -75,8 +75,8 @@ public class AddTrip extends AppCompatActivity implements TimePickerDialog.OnTim
 
     String apiKey = "AIzaSyBHpF_TLWue13wvxHvbIqugSt_3LOa2Acw";
 
-    String start = "cairo";
-    String end = "ismailia";
+    String start = "";
+    String end = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
