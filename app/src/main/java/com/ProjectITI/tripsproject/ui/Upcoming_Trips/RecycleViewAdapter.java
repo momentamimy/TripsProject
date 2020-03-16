@@ -274,6 +274,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         TripDao tripDao = new TripDao();
         tripDao.AddTrip(trip, notes,Calendar.getInstance());
         // upcomingPresenter.getAllData();
+
     }
     @Override
     public int getItemCount() {
