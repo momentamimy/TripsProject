@@ -39,14 +39,14 @@ public class AlertReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         intent.setClassName("com.ProjectITI.tripsproject","com.ProjectITI.tripsproject.ShowAlertDialog");
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
 
         //Ring(context);
         //DisplayDialogOverApps(context);
     }
 
-
+/*
     public void Ring(Context context) {
         final int MyVersion = Build.VERSION.SDK_INT;
         if (MyVersion > Build.VERSION_CODES.O) {
@@ -127,7 +127,7 @@ public class AlertReceiver extends BroadcastReceiver {
                     }
                 }
 
-*/
+
             }
         });
 
@@ -152,5 +152,5 @@ public class AlertReceiver extends BroadcastReceiver {
 
     public int dpToPx(float dp, Context context) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
-    }
+    }*/
 }

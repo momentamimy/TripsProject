@@ -19,9 +19,6 @@ public class upcomingPresenter implements upcomingContract.PresenterInterface {
         this.view = view;
         this.tripDao = tripDao;
     }
-    @Override
-    public void addTrip(Trip trip , ArrayList<String> notes,Calendar calendar) {
-        TripDao.AddTrip(trip,notes,calendar);
 
     @Override
     public void getupcomingList() {

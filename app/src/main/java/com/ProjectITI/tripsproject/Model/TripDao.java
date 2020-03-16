@@ -40,7 +40,8 @@ public class TripDao {
      final List<Trip> History = new ArrayList<>();
      final List<Trip> UpcomingData = new ArrayList<>();
      Boolean flag = false;
-    public static String AddTrip(final Trip trip , ArrayList<String> notes, final Calendar calendar)
+
+    public void AddTrip(final Trip trip , ArrayList<String> notes, final Calendar calendar)
     {
         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         final String key = mDatabase.child("Trips").child(userId).push().getKey();
@@ -79,11 +80,6 @@ public class TripDao {
             }
         });
 
-
-
-
-
-        return key;
     }
 
     public  void getAllData(final upcomingPresenter upcomingPresenter)
@@ -381,7 +377,7 @@ public  ArrayList<String> getStartPoints()
         });
         return end;
     }
-    private static void startAlarm(Trip trip, Calendar c, String key, int request) {
+    private void startAlarm(Trip trip, Calendar c, String key, int request) {
         AlarmManager alarmManager = (AlarmManager) application.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(application, AlertReceiver.class);
         intent.putExtra("name",trip.getName());
@@ -390,6 +386,7 @@ public  ArrayList<String> getStartPoints()
         intent.putExtra("type",trip.getType());
         intent.putExtra("repeat",trip.getRepeat());
         intent.putExtra("key",key);
+        intent.putExtra("request",request);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(application, request, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 

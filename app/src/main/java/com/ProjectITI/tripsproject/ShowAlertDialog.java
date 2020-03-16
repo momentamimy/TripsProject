@@ -2,6 +2,7 @@ package com.ProjectITI.tripsproject;
 
 import android.animation.Animator;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -27,16 +28,19 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
+import com.ProjectITI.tripsproject.Model.TripDao;
 import com.appolica.flubber.Flubber;
 
 public class ShowAlertDialog extends AppCompatActivity {
 
     Ringtone r;
     MediaPlayer r2;
+    TripDao tripDao;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tripDao = new TripDao();
         Ring(this);
         MyCustomDialog(this);
     }
@@ -67,31 +71,40 @@ public class ShowAlertDialog extends AppCompatActivity {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int MyVersion = Build.VERSION.SDK_INT;
-                if (MyVersion > Build.VERSION_CODES.O) {
-                    if (r2 != null) {
-                        r2.stop();
-                    }
-                } else {
-                    if (r != null) {
-                        r.stop();
-                    }
-                }
+                stopRing();
+                tripDao.cancelTrip(getIntent().getStringExtra("key"));
+                finish();
             }
         });
 
         snoozeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NotificationHelper notificationHelper = new NotificationHelper(context);
+                stopRing();
+                NotificationHelper notificationHelper = new NotificationHelper(context,getIntent().getStringExtra("name"),"wait your trip");
                 NotificationCompat.Builder nb = notificationHelper.getChannelNotification();
-                notificationHelper.getManager().notify(1, nb.build());
+
+                Intent notifyIntent = getIntent();
+                notifyIntent.setClassName("com.ProjectITI.tripsproject","com.ProjectITI.tripsproject.ShowAlertDialog");
+                notifyIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+// Create the PendingIntent
+                PendingIntent notifyPendingIntent = PendingIntent.getActivity(
+                        getApplicationContext(), notifyIntent.getIntExtra("request",0), notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
+                );
+                nb.setContentIntent(notifyPendingIntent);
+                notificationHelper.getManager().notify(getIntent().getIntExtra("request",0), nb.build());
+                finish();
             }
         });
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                stopRing();
+                tripDao.DoneTrip(getIntent().getStringExtra("key"));
+                gotToMap(getIntent().getStringExtra("from"),getIntent().getStringExtra("to"));
+                finish();
             }
         });
 
@@ -155,4 +168,24 @@ public class ShowAlertDialog extends AppCompatActivity {
         am.setStreamVolume(AudioManager.STREAM_MUSIC, am.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
     }
 
+    public void stopRing()
+    {
+        int MyVersion = Build.VERSION.SDK_INT;
+        if (MyVersion > Build.VERSION_CODES.O) {
+            if (r2 != null) {
+                r2.stop();
+            }
+        } else {
+            if (r != null) {
+                r.stop();
+            }
+        }
+    }
+    public void gotToMap(String source, String destiaion) {
+
+        String uri = "http://maps.google.com/maps?f=d&hl=en" + "&daddr=" + destiaion;
+        Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
 }

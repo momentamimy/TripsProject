@@ -15,8 +15,8 @@ public class addTripPresenter implements addTripContract.PresenterInterface {
     }
 
     @Override
-    public void   addTrip(Trip trip, Calendar calendar) {
+    public void addTrip(Trip trip, Calendar calendar) {
         ArrayList<String> empty_notes = new ArrayList<>();
-        TripDao.AddTrip(trip,empty_notes,calendar);
+        tripDao.AddTrip(trip,empty_notes,calendar);
     }
 }

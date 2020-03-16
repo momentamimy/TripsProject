@@ -9,9 +9,6 @@ import java.util.Calendar;
 
 public interface upcomingContract {
     interface PresenterInterface {
-        void addTrip(Trip trip , ArrayList<String> notes, Calendar calendar);
-        void setTripDone(String id);
-        void getAllData();
 
         void getupcomingList();
 

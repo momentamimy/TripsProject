@@ -272,7 +272,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         // Trip trip = trip_name, start, end, time, date, status, trip_type, trip_repeat);
         ArrayList<String> notes2 = new ArrayList<>();
         TripDao tripDao = new TripDao();
-        tripDao.AddTrip(trip, notes);
+        tripDao.AddTrip(trip, notes,Calendar.getInstance());
         // upcomingPresenter.getAllData();
     }
     @Override
@@ -317,7 +317,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     public void gotToMap(String source, String destiaion) {
 
-        String uri = "http://maps.google.com/maps?f=d&hl=en&saddr=" + source + "&daddr=" + destiaion;
+        String uri = "http://maps.google.com/maps?f=d&hl=en" + "&daddr=" + destiaion;
         Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);

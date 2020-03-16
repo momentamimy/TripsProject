@@ -7,7 +7,7 @@ import java.util.Calendar;
 public interface addTripContract {
     interface PresenterInterface {
 
-            String addTrip(Trip trip, Calendar calendar);
+            void addTrip(Trip trip, Calendar calendar);
         }
 
         interface ViewInterface {
