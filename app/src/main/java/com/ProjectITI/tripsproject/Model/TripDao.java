@@ -316,7 +316,7 @@ public class TripDao {
         mDatabase.child("status").setValue("Done");
     }
 
-/*
+
     public  List<String> getTripNotes(String tripId)
     {
         final List<String> Notes = new ArrayList<>();
@@ -333,7 +333,7 @@ public class TripDao {
         });
         return null;
     }
-*/
+
 public  ArrayList<String> getStartPoints()
 {
   //  final ArrayList<String> start = new ArrayList<>();

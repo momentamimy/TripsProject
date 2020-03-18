@@ -10,16 +10,17 @@
     <RelativeLayout
         android:id="@+id/SplashLayout"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="180dp"
         android:background="@drawable/grediant_bgd_radius"
         android:transitionName="Layout">
+
         <ImageView
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
             android:layout_width="150dp"
             android:layout_height="150dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:src="@drawable/logo"
-            android:transitionName="Logo"/>
+            android:transitionName="Logo" />
     </RelativeLayout>
 
     <FrameLayout

@@ -1,11 +1,14 @@
 package com.ProjectITI.tripsproject.ui.Upcoming_Trips;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -44,13 +47,21 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+import static androidx.core.app.ActivityCompat.startActivityForResult;
+import static com.ProjectITI.tripsproject.ui.Upcoming_Trips.HomeFragment.DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE;
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder>  {
   //  private upcomingContract.PresenterInterface upcomingPresenter = new upcomingPresenter(this);
-
     private final Context context;
     private List<Trip> values;
-    ArrayList<String> trip_notes = new ArrayList<String>();
+    List<String> trip_notes = new ArrayList<>();
     private Trip trip;
+
+    showNotesAdapter adapter;
+    RecyclerView recyclerView;
+
 
 
 
@@ -78,6 +89,9 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
         trip_notes = new ArrayList<>();
         trip_notes = values.get(position).getNotes();
+
+
+
         ArrayAdapter aa = new ArrayAdapter(context, android.R.layout.simple_spinner_item, trip_notes);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         holder.spinner.setSelected(false);
@@ -134,6 +148,8 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             @Override
             public void onClick(View v) {
 
+                TripDao tripDao  = new TripDao();
+
                 int trip_position = position;
 
                 String source = values.get(position).getFrom();
@@ -160,11 +176,19 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                     addNewTrip_RoundTrip(new_trip,notes);
                 }
                 String tripId = values.get(trip_position).getId();
-                TripDao tripDao = new TripDao();
-                tripDao.DoneTrip(tripId);
+                TripDao tripDao2 = new TripDao();
+                tripDao2.DoneTrip(tripId);
 
+                TripDao tr = new TripDao();
+                Intent newIntent = new Intent(context,FloatingWidgetService.class);
+                //newIntent.putExtra("position", values.get(position).getId());
+                newIntent.putStringArrayListExtra("notes", values.get(trip_position).getNotes());
+                context.startService(newIntent);
+
+                //((Activity)context).finish();
+
+               // homeFragment.getActivity().getFragmentManager().popBackStack();
                 gotToMap(source, des);
-                // upcomingPresenter.getAllData();
 
             }
         });
@@ -197,6 +221,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         intent.putStringArrayListExtra("notes", notes);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+
 */
     }
 
@@ -211,6 +236,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             trip_date = df.parse(trip.getDate());
             Log.i("tag", "new Date  : " + trip_date.toString());
             cal.setTime(trip_date);
+
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -257,6 +283,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 newDate = (day + 1) + "/" + Month + "/" + year;
             }
             trip.setDate(newDate);
+
 
         } else if (repeat.equals("Repeat Monthly")) {
 
@@ -317,20 +344,11 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
 
     public void gotToMap(String source, String destiaion) {
-
+        //If permission is granted start floating widget service
         String uri = "http://maps.google.com/maps?f=d&hl=en" + "&daddr=" + destiaion;
         Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
-    }
-
-
-    public void displayMessage(String msg) {
-        Toast.makeText(context,msg,Toast.LENGTH_LONG).show();
-    }
-
-
-    public void setupcomingData(List<Trip> upcomingtrips) {
 
     }
 

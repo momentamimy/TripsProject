@@ -1,7 +1,12 @@
 package com.ProjectITI.tripsproject.ui.Upcoming_Trips;
 
+import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,8 +33,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 public class HomeFragment extends Fragment implements upcomingContract.ViewInterface {
 
+    public static final int DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE = 1222;
 
   //  private upcomingContract.PresenterInterface presenterInterface;
     public static String userId = FirebaseAuth.getInstance().getUid();
@@ -42,14 +52,32 @@ public class HomeFragment extends Fragment implements upcomingContract.ViewInter
     private static LinearLayout noTrips;
     static List<Trip> newData = new ArrayList<>();
 
+
+    private List<Trip> values;
+    ArrayList<String> trip_notes ;
+    showNotesAdapter adapter;
+    RecyclerView recyclerView;
+
     TripDao tripDao;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (!Settings.canDrawOverlays(context)) {
+            int REQUEST_CODE = 101;
+            Intent myIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+            myIntent.setData(Uri.parse("package:" + context.getPackageName()));
+            startActivityForResult(myIntent, REQUEST_CODE);
+        }
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         noTrips = root.findViewById(R.id.no_trips_layout);
         v = (RecyclerView) root.findViewById(R.id.recycleView_id);
        // presenterInterface = new upcomingPresenter(getView());
-        tripDao = new TripDao();
+
+       tripDao = new TripDao();
+//        result = new ArrayList<String>();
+//        result = tripDao.getTripNotes();
+
+
         return root;
     }
 
@@ -99,4 +127,6 @@ public class HomeFragment extends Fragment implements upcomingContract.ViewInter
         noTrips.setVisibility(View.VISIBLE);
         v.setVisibility(View.INVISIBLE);
     }
+
+
 }
