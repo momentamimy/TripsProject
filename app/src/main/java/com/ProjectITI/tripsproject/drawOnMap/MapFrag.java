@@ -60,13 +60,13 @@ public class MapFrag extends Fragment implements OnMapReadyCallback {
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        TripDao tripDao = new TripDao();
+        tripDao.getDrawRoutes(this);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        TripDao tripDao = new TripDao();
-        tripDao.getDrawRoutes(this);
     }
 
     public void drawRoates(ArrayList<String> startPoints, ArrayList<String> endPoints, ArrayList<String> namesList) {
