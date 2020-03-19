@@ -1,6 +1,7 @@
 package com.ProjectITI.tripsproject.Model;
 
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.PendingIntent;
@@ -24,33 +25,40 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class TripDao {
-     Application application = HomeScreen.application;
-    private  DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-     String userId = FirebaseAuth.getInstance().getUid();
+    private Activity activity = null;
 
-    public  static final ArrayList<String> start = new ArrayList<>();
-    public  static final ArrayList<String> end = new ArrayList<>();
-     final List<Trip> History = new ArrayList<>();
-     final List<Trip> UpcomingData = new ArrayList<>();
-     Boolean flag = false;
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
 
-    public void AddTrip(final Trip trip , ArrayList<String> notes, final Calendar calendar)
-    {
+    Application application = HomeScreen.application;
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    String userId = FirebaseAuth.getInstance().getUid();
+
+    public static final ArrayList<String> start = new ArrayList<>();
+    public static final ArrayList<String> end = new ArrayList<>();
+    final List<Trip> History = new ArrayList<>();
+    final List<Trip> UpcomingData = new ArrayList<>();
+    Boolean flag = false;
+
+    public void AddTrip(final Trip trip, ArrayList<String> notes, final Calendar calendar) {
         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         final String key = mDatabase.child("Trips").child(userId).push().getKey();
-        Log.i("tag" , " key : "+key);
+        Log.i("tag", " key : " + key);
         //mDatabase.child("Trips").child(userId).child(key).setValue(trip);
 
-        if(notes.size() !=0 || notes != null)
-        {
-            addNotes(key,notes);
+        if (notes.size() != 0 || notes != null) {
+            addNotes(key, notes);
         }
         mDatabase.keepSynced(true);
         mDatabase.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -64,10 +72,13 @@ public class TripDao {
                 mDatabase.child("Trips").child(userId).child(key).child("to").setValue(trip.getTo());
                 mDatabase.child("Trips").child(userId).child(key).child("type").setValue(trip.getType());
                 mDatabase.child("Trips").child(userId).child(key).child("repeat").setValue(trip.getRepeat());
+                mDatabase.child("Trips").child(userId).child(key).child("wait").setValue(trip.isWait());
 
 
                 int request = dataSnapshot.child("TripsCount").getValue(Integer.class);
-                startAlarm(trip,calendar,key,request);
+                if (!trip.isWait()) {
+                    startAlarm(trip, calendar, key, request);
+                }
                 mDatabase.child("Trips").child(userId).child(key).child("alarm request").setValue(request);
 
                 request++;
@@ -82,75 +93,77 @@ public class TripDao {
 
     }
 
-    public  void getAllData(final upcomingPresenter upcomingPresenter)
-    {
+    public void getAllData(final upcomingPresenter upcomingPresenter) {
         //flag = false;
         DatabaseReference newsRef = mDatabase.child("Trips").child(userId);
         newsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.i("tag","onDataChange upcoming data");
-                  UpcomingData.clear();
-                for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Log.i("tag","for in upcoming");
-                    String name = ds.child("name").getValue(String.class);
-                    String from = ds.child("from").getValue(String.class);
-                    String to = ds.child("to").getValue(String.class);
-                    String status = ds.child("status").getValue(String.class);
-                    String time = ds.child("time").getValue(String.class);
-                    String date = ds.child("date").getValue(String.class);
-                    String type = ds.child("type").getValue(String.class);
-                    String repeat = ds.child("repeat").getValue(String.class);
-                    String id = ds.getKey();
-                    Map<String, String> td ;
-                    ArrayList<String> map;
-                    try {
-                        td = (HashMap<String, String>) ds.child("Notes").getValue();
-                        map = new ArrayList<>(td.values());
-                    }catch (Exception e)
-                    {
-                        td = new HashMap<>();
-                        map = new ArrayList<>();
-                    }
-                  if(map != null)
-                    for (int i = 0 ; i<map.size() ;i++)
-                    {
-                        if(map.get(i)==null)
-                        {
-                            map.remove(i);
+                if (dataSnapshot.exists()) {
+                    Log.i("tag", "onDataChange upcoming data");
+                    UpcomingData.clear();
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        Log.i("tag", "for in upcoming");
+                        String name = ds.child("name").getValue(String.class);
+                        String from = ds.child("from").getValue(String.class);
+                        String to = ds.child("to").getValue(String.class);
+                        String status = ds.child("status").getValue(String.class);
+                        String time = ds.child("time").getValue(String.class);
+                        String date = ds.child("date").getValue(String.class);
+                        String type = ds.child("type").getValue(String.class);
+                        String repeat = ds.child("repeat").getValue(String.class);
+                        Boolean wait = ds.child("wait").getValue(Boolean.class);
+                        String id = ds.getKey();
+                        Map<String, String> td;
+                        ArrayList<String> map;
+                        try {
+                            td = (HashMap<String, String>) ds.child("Notes").getValue();
+                            map = new ArrayList<>(td.values());
+                        } catch (Exception e) {
+                            td = new HashMap<>();
+                            map = new ArrayList<>();
                         }
-                    }else{
-                        map = new ArrayList<>();
+                        if (map != null)
+                            for (int i = 0; i < map.size(); i++) {
+                                if (map.get(i) == null) {
+                                    map.remove(i);
+                                }
+                            }
+                        else {
+                            map = new ArrayList<>();
+                        }
+                        if (status != null && wait != null)
+                            if (status.equals("upcoming")) {
+                                UpcomingData.add(new Trip(id, name, from, to, time, date, status, type, repeat, map, wait));
+                                Log.i("tag", "upcomind list : " + UpcomingData);
+                            }
                     }
-                    if(status.equals("upcoming")) {
-                        UpcomingData.add(new Trip(id, name, from, to, time, date, status, type, repeat, map));
-                        Log.i("tag","upcomind list : "+UpcomingData);
-                    }
-            }
-              //  flag = true;
-              //  Trip.UpcomingData = UpcomingData;
+                }
+                //  flag = true;
+                //  Trip.UpcomingData = UpcomingData;
                 upcomingPresenter.setData(UpcomingData);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.i("tag", databaseError.getMessage());
             }
         });
-       // if (flag != true) {
-            upcomingPresenter.setData(UpcomingData);
-      //  }
+        // if (flag != true) {
+        upcomingPresenter.setData(UpcomingData);
+        //  }
     }
-    public  void getHistoryData(final historyPresenter historyPresenter)
-    {
+
+    public void getHistoryData(final historyPresenter historyPresenter) {
 
         DatabaseReference newsRef = mDatabase.child("Trips").child(userId);
         newsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.i("tag","onDataChange History data");
+                Log.i("tag", "onDataChange History data");
 
                 History.clear();
-                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     String name = ds.child("name").getValue(String.class);
                     String from = ds.child("from").getValue(String.class);
                     String to = ds.child("to").getValue(String.class);
@@ -159,166 +172,185 @@ public class TripDao {
                     String date = ds.child("date").getValue(String.class);
                     String type = ds.child("type").getValue(String.class);
                     String repeat = ds.child("repeat").getValue(String.class);
+                    Boolean wait = ds.child("wait").getValue(Boolean.class);
                     String id = ds.getKey();
-                    Map<String, String> td ;
+                    Map<String, String> td;
                     ArrayList<String> map;
                     try {
                         td = (HashMap<String, String>) ds.child("Notes").getValue();
                         map = new ArrayList<>(td.values());
-                    }catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         td = new HashMap<>();
                         map = new ArrayList<>();
                     }
-                    if(map != null)
-                        for (int i = 0 ; i<map.size() ;i++)
-                        {
-                            if(map.get(i)==null)
-                            {
+                    if (map != null)
+                        for (int i = 0; i < map.size(); i++) {
+                            if (map.get(i) == null) {
                                 map.remove(i);
                             }
-                        }else{
+                        }
+                    else {
                         map = new ArrayList<>();
                     }
-                    if (!status.equals("upcoming"))
-                    History.add(new Trip(id,name, from, to, time, date, status, type, repeat,map));
+                    if (status != null && wait != null)
+                        if (!status.equals("upcoming"))
+                            History.add(new Trip(id, name, from, to, time, date, status, type, repeat, map, wait));
                 }
-              //  flag = true;
-             //   Trip.HistoryData = History;
+                //  flag = true;
+                //   Trip.HistoryData = History;
                 historyPresenter.setData(History);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.i("tag", databaseError.getMessage());
             }
         });
-      //  if(flag == false)
+        //  if(flag == false)
         historyPresenter.setData(History);
     }
-/*
-    public  void getAllData(final String trip_status)
-    {
-        final List<Trip> UpcomingData = new ArrayList<>();
-        final List<Trip> HistoryData = new ArrayList<>();
-        final ArrayList<String> start = new ArrayList<>();
-        final ArrayList<String> end = new ArrayList<>();
 
-        DatabaseReference newsRef = mDatabase.child("Trips").child(userId);
+    /*
+        public  void getAllData(final String trip_status)
+        {
+            final List<Trip> UpcomingData = new ArrayList<>();
+            final List<Trip> HistoryData = new ArrayList<>();
+            final ArrayList<String> start = new ArrayList<>();
+            final ArrayList<String> end = new ArrayList<>();
 
-        newsRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                UpcomingData.clear();
-                HistoryData.clear();
-                for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Log.i("tag","for loop");
-                    String name = ds.child("name").getValue(String.class);
-                    String from = ds.child("from").getValue(String.class);
-                    String to = ds.child("to").getValue(String.class);
-                    String status = ds.child("status").getValue(String.class);
-                    String time = ds.child("time").getValue(String.class);
-                    String date = ds.child("date").getValue(String.class);
-                    String type = ds.child("type").getValue(String.class);
-                    String repeat = ds.child("repeat").getValue(String.class);
-                    String id = ds.getKey();
-                    Map<String, String> td ;
-                    ArrayList<String> map;
-                    try {
-                        td = (HashMap<String, String>) ds.child("Notes").getValue();
-                        map = new ArrayList<>(td.values());
-                    }catch (Exception e)
-                    {
-                        td = new HashMap<>();
-                        map = new ArrayList<>();
-                    }
-                    if(map != null)
-                        for (int i = 0 ; i<map.size() ;i++)
+            DatabaseReference newsRef = mDatabase.child("Trips").child(userId);
+
+            newsRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    UpcomingData.clear();
+                    HistoryData.clear();
+                    for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                        Log.i("tag","for loop");
+                        String name = ds.child("name").getValue(String.class);
+                        String from = ds.child("from").getValue(String.class);
+                        String to = ds.child("to").getValue(String.class);
+                        String status = ds.child("status").getValue(String.class);
+                        String time = ds.child("time").getValue(String.class);
+                        String date = ds.child("date").getValue(String.class);
+                        String type = ds.child("type").getValue(String.class);
+                        String repeat = ds.child("repeat").getValue(String.class);
+                        String id = ds.getKey();
+                        Map<String, String> td ;
+                        ArrayList<String> map;
+                        try {
+                            td = (HashMap<String, String>) ds.child("Notes").getValue();
+                            map = new ArrayList<>(td.values());
+                        }catch (Exception e)
                         {
-                            if(map.get(i)==null)
+                            td = new HashMap<>();
+                            map = new ArrayList<>();
+                        }
+                        if(map != null)
+                            for (int i = 0 ; i<map.size() ;i++)
                             {
-                                map.remove(i);
-                            }
+                                if(map.get(i)==null)
+                                {
+                                    map.remove(i);
+                                }
+                            }else{
+                            map = new ArrayList<>();
+                        }
+                        if(status.equals("upcoming")) {
+                            UpcomingData.add(new Trip(id,name, from, to, time, date, status, type, repeat,map));
                         }else{
-                        map = new ArrayList<>();
+                            start.add(from);
+                            end.add(to);
+                            HistoryData.add(new Trip(id,name, from, to, time, date, status, type, repeat,map));
+                        }
+    //twoice
                     }
-                    if(status.equals("upcoming")) {
-                        UpcomingData.add(new Trip(id,name, from, to, time, date, status, type, repeat,map));
-                    }else{
-                        start.add(from);
-                        end.add(to);
-                        HistoryData.add(new Trip(id,name, from, to, time, date, status, type, repeat,map));
+                    if(trip_status.equals("upcoming")) {
+                        HomeFragment.SetDataInRcycleView(UpcomingData);
+                    }else if (trip_status.equals("allstatus")){
+                        HistoryFragment.SetDataInRcycleView(HistoryData);
                     }
-//twoice
                 }
-                if(trip_status.equals("upcoming")) {
-                    HomeFragment.SetDataInRcycleView(UpcomingData);
-                }else if (trip_status.equals("allstatus")){
-                    HistoryFragment.SetDataInRcycleView(HistoryData);
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.i("tag", databaseError.getMessage());
                 }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.i("tag", databaseError.getMessage());
-            }
-        });
+            });
 
-        if(trip_status.equals("upcoming")) {
-            HomeFragment.SetDataInRcycleView(UpcomingData);
-        }else {
-            HistoryFragment.SetDataInRcycleView(HistoryData);
+            if(trip_status.equals("upcoming")) {
+                HomeFragment.SetDataInRcycleView(UpcomingData);
+            }else {
+                HistoryFragment.SetDataInRcycleView(HistoryData);
+            }
         }
-    }
-*/
-    public  void deleteTrip( String tripId)
-    {
+    */
+    public void deleteTrip(String tripId) {
+        cancelAlarmWithKey(tripId);
         mDatabase = FirebaseDatabase.getInstance().getReference()
                 .child("Trips").child(userId).child(tripId);
         mDatabase.removeValue();
-
     }
 
-    public  void cancelTrip (String tripId)
-    {
+    public void cancelTrip(String tripId) {
+        cancelAlarmWithKey(tripId);
         mDatabase = FirebaseDatabase.getInstance().getReference()
                 .child("Trips").child(userId).child(tripId);
         mDatabase.child("status").setValue("Cancel");
     }
 
-    public  void addNotes(String tripId , List<String> Notes )
-    {
+    public void setWaitingTrip(String tripId) {
+        mDatabase = FirebaseDatabase.getInstance().getReference()
+                .child("Trips").child(userId).child(tripId);
+        mDatabase.child("wait").setValue(true);
+    }
+
+    public void addNotes(String tripId, List<String> Notes) {
         mDatabase.child("Trips").child(userId).child(tripId).child("Notes").removeValue();
-        for (int i=0 ; i<Notes.size() ; i++) {
+        for (int i = 0; i < Notes.size(); i++) {
             mDatabase.child("Trips").child(userId).child(tripId).child("Notes").push().setValue(Notes.get(i));
         }
     }
 
-    public  void EditTrip (String id , Trip trip)
-    {
-        String key = id;
-        Log.i("tag","key od edit : "+key);
-        mDatabase.child("Trips").child(userId).child(key).setValue(trip);
-        /*
+    public void EditTrip(String id, final Trip trip, final Calendar calendar) {
+        final String key = id;
+
+        mDatabase.child("Trips").child(userId).child(key).child("status").setValue(trip.getStatus());
         mDatabase.child("Trips").child(userId).child(key).child("name").setValue(trip.getName());
         mDatabase.child("Trips").child(userId).child(key).child("from").setValue(trip.getFrom());
         mDatabase.child("Trips").child(userId).child(key).child("to").setValue(trip.getTo());
-        mDatabase.child("Trips").child(userId).child(key).child("status").setValue(trip.getStatus());
         mDatabase.child("Trips").child(userId).child(key).child("type").setValue(trip.getType());
         mDatabase.child("Trips").child(userId).child(key).child("repeat").setValue(trip.getRepeat());
         mDatabase.child("Trips").child(userId).child(key).child("time").setValue(trip.getTime());
         mDatabase.child("Trips").child(userId).child(key).child("date").setValue(trip.getDate());
 
-         */
+
+        if (Calendar.getInstance().getTimeInMillis()<calendar.getTimeInMillis()) {
+            mDatabase.child("Trips").child(userId).child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    int request = dataSnapshot.child("alarm request").getValue(Integer.class);
+                    startAlarm(trip, calendar, key, request);
+                    mDatabase.child("Trips").child(userId).child(key).child("wait").setValue(false);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+
     }
-    public  void DoneTrip (String tripId)
-    {
+
+    public void DoneTrip(String tripId) {
+        cancelAlarmWithKey(tripId);
         mDatabase = FirebaseDatabase.getInstance().getReference()
                 .child("Trips").child(userId).child(tripId);
         mDatabase.child("status").setValue("Done");
+
     }
 
-
-    public  List<String> getTripNotes(String tripId)
-    {
+    public ArrayList<String> getTripNotes(String tripId) {
         final List<String> Notes = new ArrayList<>();
         DatabaseReference newsRef = mDatabase.child("Notes").child(tripId);
         newsRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -326,50 +358,51 @@ public class TripDao {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.i("tag", databaseError.getMessage());
             }
         });
-        return null;
+        return new ArrayList<>();
     }
 
-public  ArrayList<String> getStartPoints()
-{
-  //  final ArrayList<String> start = new ArrayList<>();
-    DatabaseReference ref = mDatabase.child("Trips").child(userId);
-    ref.addListenerForSingleValueEvent(new ValueEventListener() {
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-            start.clear();
-            for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                String from = ds.child("from").getValue(String.class);
-                start.add(from);
-                //  String to = ds.child("to").getValue(String.class);
+    public ArrayList<String> getStartPoints() {
+        //  final ArrayList<String> start = new ArrayList<>();
+        DatabaseReference ref = mDatabase.child("Trips").child(userId);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                start.clear();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    String from = ds.child("from").getValue(String.class);
+                    start.add(from);
+                    //  String to = ds.child("to").getValue(String.class);
+                }
             }
-        }
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-            // Code
-        }
-    });
-    return start;
-}
 
-    public  ArrayList<String> getEndPoints()
-    {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Code
+            }
+        });
+        return start;
+    }
+
+    public ArrayList<String> getEndPoints() {
         DatabaseReference ref = mDatabase.child("Trips").child(userId);
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 end.clear();
-                Log.i("tag","onDataChange");
+                Log.i("tag", "onDataChange");
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     String to = ds.child("to").getValue(String.class);
-                    Log.i("tag","to : "+to);
+                    Log.i("tag", "to : " + to);
                     end.add(to);
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Code
@@ -377,25 +410,180 @@ public  ArrayList<String> getStartPoints()
         });
         return end;
     }
+
     private void startAlarm(Trip trip, Calendar c, String key, int request) {
+        if (activity == null) {
+            AlarmManager alarmManager = (AlarmManager) application.getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(application, AlertReceiver.class);
+            intent.putExtra("name", trip.getName());
+            intent.putExtra("from", trip.getFrom());
+            intent.putExtra("to", trip.getTo());
+            intent.putExtra("type", trip.getType());
+            intent.putExtra("repeat", trip.getRepeat());
+            intent.putExtra("date", trip.getDate());
+            intent.putExtra("time", trip.getTime());
+            intent.putExtra("key", key);
+            intent.putExtra("request", request);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(application, request, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            Log.d("Request_Num", "start: " + request);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+            } else {
+                alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+            }
+        } else {
+            AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(activity, AlertReceiver.class);
+            intent.putExtra("name", trip.getName());
+            intent.putExtra("from", trip.getFrom());
+            intent.putExtra("to", trip.getTo());
+            intent.putExtra("type", trip.getType());
+            intent.putExtra("repeat", trip.getRepeat());
+            intent.putExtra("date", trip.getDate());
+            intent.putExtra("time", trip.getTime());
+            intent.putExtra("key", key);
+            intent.putExtra("request", request);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(activity, request, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            Log.d("Request_Num", "start: " + request);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+            } else {
+                alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+            }
+        }
+
+    }
+
+    public void cancelAlarmWithKey(String key) {
+        mDatabase.child("Trips").child(userId).child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    int request = dataSnapshot.child("alarm request").getValue(Integer.class);
+                    Log.d("Request_Num", "onDataChange: " + request);
+                    cancelAlarm(request);
+                } else {
+                    Log.d("Request_Num", "NotExist: ");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void startAllAlarm() {
+        mDatabase.child("Trips").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        int request = ds.child("alarm request").getValue(Integer.class);
+                        String name = ds.child("name").getValue(String.class);
+                        String from = ds.child("from").getValue(String.class);
+                        String to = ds.child("to").getValue(String.class);
+                        String status = ds.child("status").getValue(String.class);
+                        String time = ds.child("time").getValue(String.class);
+                        String date = ds.child("date").getValue(String.class);
+                        String type = ds.child("type").getValue(String.class);
+                        String repeat = ds.child("repeat").getValue(String.class);
+                        Boolean wait = ds.child("wait").getValue(Boolean.class);
+                        String id = ds.getKey();
+                        Map<String, String> td;
+                        ArrayList<String> map;
+                        try {
+                            td = (HashMap<String, String>) ds.child("Notes").getValue();
+                            map = new ArrayList<>(td.values());
+                        } catch (Exception e) {
+                            td = new HashMap<>();
+                            map = new ArrayList<>();
+                        }
+                        if (map != null)
+                            for (int i = 0; i < map.size(); i++) {
+                                if (map.get(i) == null) {
+                                    map.remove(i);
+                                }
+                            }
+                        else {
+                            map = new ArrayList<>();
+                        }
+                        if (status != null && wait != null)
+                            if (status.equals("upcoming") && !wait) {
+                                Trip trip = new Trip(id, name, from, to, time, date, status, type, repeat, map, wait);
+                                Calendar calendar = convertDate(date, time);
+                                boolean start = checkCalender(calendar);
+                                if (start) {
+                                    startAlarm(trip, calendar, trip.getId(), request);
+                                } else {
+                                    setWaitingTrip(id);
+                                }
+                            }
+
+                    }
+                } else {
+                    Log.d("Request_Num", "NotExist: ");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private boolean checkCalender(Calendar calendar) {
+        if (Calendar.getInstance().getTimeInMillis() > calendar.getTimeInMillis())
+            return false;
+        else
+            return true;
+    }
+
+    private Calendar convertDate(String date, String time) {
+        Date trip_date;
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy h:mm a");
+        try {
+            trip_date = df.parse(date + " " + time);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(trip_date);
+            return cal;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void cancelAllAlarm() {
+        mDatabase.child("Trips").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        int request = ds.child("alarm request").getValue(Integer.class);
+                        cancelAlarm(request);
+                    }
+                } else {
+                    Log.d("Request_Num", "NotExist: ");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void cancelAlarm(int request) {
         AlarmManager alarmManager = (AlarmManager) application.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(application, AlertReceiver.class);
-        intent.putExtra("name",trip.getName());
-        intent.putExtra("from",trip.getFrom());
-        intent.putExtra("to",trip.getTo());
-        intent.putExtra("type",trip.getType());
-        intent.putExtra("repeat",trip.getRepeat());
-        intent.putExtra("key",key);
-        intent.putExtra("request",request);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(application, request, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(application, request, intent, 0);
 
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
-        }
-        else
-        {
-            alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
-        }
+        alarmManager.cancel(pendingIntent);
     }
+
 }

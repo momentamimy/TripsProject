@@ -9,7 +9,7 @@ public class Trip {
   //  public static  List<Trip> UpcomingData = new ArrayList<>();
 //    public static  List<Trip> HistoryData = new ArrayList<>();
 
-    public Trip(String name, String from, String to, String time, String date, String status, String type, String repeat) {
+    public Trip(String name, String from, String to, String time, String date, String status, String type, String repeat,boolean wait) {
         Name = name;
         From = from;
         To = to;
@@ -18,6 +18,7 @@ public class Trip {
         this.status = status;
         this.type = type;
         this.repeat = repeat;
+        this.wait = wait;
     }
 
     private String id;
@@ -39,6 +40,7 @@ public class Trip {
     private String repeat;
     private ArrayList<String> notes;
 
+    private boolean wait=false;
 
     public String getRepeat() {
         return repeat;
@@ -58,7 +60,7 @@ public class Trip {
         this.type = type;
         this.repeat = repeat;
     }
-    public Trip(String id, String name, String from, String to, String time, String date, String status, String type, String repeat, ArrayList<String> notes) {
+    public Trip(String id, String name, String from, String to, String time, String date, String status, String type, String repeat, ArrayList<String> notes,boolean wait) {
         this.id = id;
         Name = name;
         From = from;
@@ -69,6 +71,7 @@ public class Trip {
         this.type = type;
         this.repeat = repeat;
         this.notes = notes;
+        this.wait = wait;
     }
 
     public ArrayList<String> getNotes() {
@@ -141,5 +144,13 @@ public class Trip {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public boolean isWait() {
+        return wait;
+    }
+
+    public void setWait(boolean wait) {
+        this.wait = wait;
     }
 }

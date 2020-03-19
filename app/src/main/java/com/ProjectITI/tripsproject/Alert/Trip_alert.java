@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.ProjectITI.tripsproject.Login.LoginFragment;
 import com.ProjectITI.tripsproject.LoginSignup_Activity;
 import com.ProjectITI.tripsproject.Model.TripDao;
+import com.ProjectITI.tripsproject.SplashScreen;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class Trip_alert extends AppCompatActivity {
     String trip_id;
@@ -69,9 +71,12 @@ public class Trip_alert extends AppCompatActivity {
                             editor.putString("name", "");
                             editor.commit();
                             */
+                            TripDao tripDao = new TripDao();
+                            tripDao.cancelAllAlarm();
+                            FirebaseAuth.getInstance().signOut();
+                            getSharedPreferences("USER", MODE_PRIVATE).edit().clear().commit();
                             Intent intent = new Intent(getApplicationContext(), LoginSignup_Activity.class);
-                           // intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             getApplicationContext().startActivity(intent);
                             Log.i("tag","Loggin out");
                         }

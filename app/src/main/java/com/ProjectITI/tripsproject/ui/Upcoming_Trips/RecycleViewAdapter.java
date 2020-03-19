@@ -81,7 +81,15 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull final RecycleViewAdapter.ViewHolder holder, final int position) {
-        holder.tripname.setText(values.get(position).getName());
+        if (values.get(position).isWait())
+        {
+            holder.tripname.setText("Waiting :\n"+values.get(position).getName());
+        }
+        else
+        {
+            holder.tripname.setText(values.get(position).getName());
+        }
+
         holder.from.setText(values.get(position).getFrom());
         holder.to.setText(values.get(position).getTo());
         holder.data.setText(values.get(position).getDate());
@@ -167,12 +175,12 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 // No Repeat, Repeat Daily, Repeat Weekly, Repeat Monthly
                 if (repeat.equals("Repeat Weekly") || repeat.equals("Repeat Daily") || repeat.equals("Repeat Monthly")) {
 
-                    Trip new_trip = new Trip(name, startPoint, endPoint, time, startDate, "upcoming", type, repeat);
+                    Trip new_trip = new Trip(name, startPoint, endPoint, time, startDate, "upcoming", type, repeat,false);
                     addNewTrip_Reapet(repeat, new_trip, notes);
                 }
                 //One Way Trip, Round Trip
                 if (type.equals("Round Trip")) {
-                    Trip new_trip = new Trip(name, startPoint, endPoint, time, startDate, "upcoming", type, repeat);
+                    Trip new_trip = new Trip(name, startPoint, endPoint, time, startDate, "upcoming", type, repeat,true);
                     addNewTrip_RoundTrip(new_trip,notes);
                 }
                 String tripId = values.get(trip_position).getId();
@@ -202,9 +210,10 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         trip.setType("One Way Trip");
         trip.setFrom(start);
         trip.setTo(end);
-
+        trip.setWait(true);
+        trip.setName(trip.getName()+" - BACK");
         TripDao tripDao = new TripDao();
-        tripDao.AddTrip(trip, notes,Calendar.getInstance());
+        tripDao.AddTrip(trip, notes,null);
 
 
 
@@ -241,14 +250,17 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             e.printStackTrace();
         }
 
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        int Month = cal.get(Calendar.MONTH) + 1;
-        int year = cal.get(Calendar.YEAR);
 
-        Log.i("tag", "day " + day + "/" + Month + "/" + year);
+
+        //Log.i("tag", "day " + day + "/" + Month + "/" + year);
 
         if (repeat.equals("Repeat Weekly")) {
-
+            cal.add(Calendar.WEEK_OF_YEAR,1);
+            int day = cal.get(Calendar.DAY_OF_MONTH);
+            int Month = cal.get(Calendar.MONTH) + 1;
+            int year = cal.get(Calendar.YEAR);
+            newDate = day + "/" + Month + "/" + year;
+           /*
             int days = day + 7;
             if(days>31)
             {
@@ -263,11 +275,17 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
             }else{
                 newDate = (day + 7) + "/" + Month + "/" + year;
-            }
+            }*/
             trip.setDate(newDate);
 
         } else if (repeat.equals("Repeat Daily")) {
 
+            cal.add(Calendar.DAY_OF_MONTH,1);
+            int day = cal.get(Calendar.DAY_OF_MONTH);
+            int Month = cal.get(Calendar.MONTH) + 1;
+            int year = cal.get(Calendar.YEAR);
+            newDate = day + "/" + Month + "/" + year;
+            /*
             int num = day +1;
             if(num >31)
             {
@@ -281,25 +299,30 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 }
             }else{
                 newDate = (day + 1) + "/" + Month + "/" + year;
-            }
+            }*/
             trip.setDate(newDate);
 
 
         } else if (repeat.equals("Repeat Monthly")) {
-
+            cal.add(Calendar.MONTH,1);
+            int day = cal.get(Calendar.DAY_OF_MONTH);
+            int Month = cal.get(Calendar.MONTH) + 1;
+            int year = cal.get(Calendar.YEAR);
+            newDate = day + "/" + Month + "/" + year;
+            /*
             int newMonth = Month+1;
             if(newMonth >12)
             {
                 newDate = day + "/" + 1 + "/" + year+1;
             }else{
                 newDate = day + "/" + (Month + 1) + "/" + year;
-            }
+            }*/
             trip.setDate(newDate);
         }
         // Trip trip = trip_name, start, end, time, date, status, trip_type, trip_repeat);
         ArrayList<String> notes2 = new ArrayList<>();
         TripDao tripDao = new TripDao();
-        tripDao.AddTrip(trip, notes,Calendar.getInstance());
+        tripDao.AddTrip(trip, notes,cal);
         // upcomingPresenter.getAllData();
 
     }

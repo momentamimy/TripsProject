@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.ProjectITI.tripsproject.HomeScreen;
+import com.ProjectITI.tripsproject.Model.TripDao;
 import com.ProjectITI.tripsproject.R;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -179,7 +180,9 @@ public class LoginFragment extends Fragment implements LoginContract.ViewInterfa
 
     @Override
     public void LoginSucceed(String email,String pass,String userName) {
-
+        TripDao tripDao = new TripDao();
+        tripDao.setActivity(getActivity());
+        tripDao.startAllAlarm();
         Toast.makeText(getContext(),userName,Toast.LENGTH_LONG).show();
         SharedPreferences.Editor editor = getActivity().getSharedPreferences("USER", MODE_PRIVATE).edit();
         editor.putString("name", userName);

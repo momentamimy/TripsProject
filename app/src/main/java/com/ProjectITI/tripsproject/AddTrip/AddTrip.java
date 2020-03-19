@@ -265,7 +265,7 @@ public class AddTrip extends AppCompatActivity implements addTripContract.ViewIn
                 String trip_repeat = repeat.getSelectedItem().toString();
                 String status = "upcoming";
                 String trip_type = type.getSelectedItem().toString();
-                Trip trip = new Trip(trip_name, start, end, time, date, status, trip_type, trip_repeat);
+                Trip trip = new Trip(trip_name, start, end, time, date, status, trip_type, trip_repeat,false);
                 ArrayList<String> notes = new ArrayList<>();
 
 
@@ -281,6 +281,10 @@ public class AddTrip extends AppCompatActivity implements addTripContract.ViewIn
         if (tripNameEditText.getText().toString().isEmpty())
         {
             tripNameEditText.setError("fill trip name");
+        }
+        else if (start.equals("") || end.equals(""))
+        {
+            Toast.makeText(getApplicationContext(),"select start point and end point of the trip",Toast.LENGTH_LONG).show();
         }
         else if (!TimeIsSet)
         {

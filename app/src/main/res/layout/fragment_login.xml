@@ -2,7 +2,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/bgd7"
     tools:context=".LoginSignup_Activity"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -10,17 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="20dp"
-            app:cardBackgroundColor="@color/backgroundLightBlue"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="5dp">
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="530dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp"
                 tools:context=".Login.LoginFragment">
 
                 <RelativeLayout
@@ -46,7 +40,7 @@
                             android:drawablePadding="12dp"
                             android:ems="10"
                             android:hint="Email"
-                            android:inputType="text"
+                            android:inputType="textEmailAddress"
                             android:maxLines="1"
                             android:padding="12dp" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -94,19 +88,21 @@
                     android:textSize="18sp" />
 
                 <Button
+                    android:layout_below="@+id/facebook_Card"
                     android:id="@+id/SignUpActivity"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="25dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginBottom="20dp"
-                    android:background="@drawable/glory_button_dark"
+                    android:background="@drawable/glory_button_border"
                     android:text="sign up"
-                    android:textColor="#fff"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="18sp" />
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/facebook_Card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/login_button_gmail"
@@ -134,6 +130,5 @@
                     android:layout_marginEnd="45dp" />
 
             </RelativeLayout>
-        </androidx.cardview.widget.CardView>
     </ScrollView>
 </RelativeLayout>

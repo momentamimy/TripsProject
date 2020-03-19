@@ -28,8 +28,15 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
+import com.ProjectITI.tripsproject.Model.Trip;
 import com.ProjectITI.tripsproject.Model.TripDao;
 import com.appolica.flubber.Flubber;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class ShowAlertDialog extends AppCompatActivity {
 
@@ -37,10 +44,26 @@ public class ShowAlertDialog extends AppCompatActivity {
     MediaPlayer r2;
     TripDao tripDao;
 
+    String key,repeat,name ,startPoint,endPoint,startDate,time,type;
+    ArrayList<String> notes;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         tripDao = new TripDao();
+        if (getIntent()!=null)
+        {
+            key = getIntent().getStringExtra("key");
+            repeat = getIntent().getStringExtra("repeat");
+            name = getIntent().getStringExtra("name");
+            startPoint = getIntent().getStringExtra("from");
+            endPoint = getIntent().getStringExtra("to");
+            startDate = getIntent().getStringExtra("date");
+            time = getIntent().getStringExtra("time");
+            type = getIntent().getStringExtra("type");
+
+            notes = tripDao.getTripNotes(key);
+        }
         Ring(this);
         MyCustomDialog(this);
     }
@@ -55,14 +78,13 @@ public class ShowAlertDialog extends AppCompatActivity {
         Window window = tripDialog.getWindow();
         window.setLayout(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
         tripDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        tripDialog.setCancelable(false);
 
         Button cancelButton, snoozeButton, startButton;
         ImageView alarmImage = tripDialog.findViewById(R.id.AlarmImage);
         TextView tripName = tripDialog.findViewById(R.id.TripNameText);
-        if (getIntent()!=null)
-        {
-            tripName.setText(getIntent().getStringExtra("name"));
-        }
+
+        tripName.setText(name);
 
         cancelButton = tripDialog.findViewById(R.id.CancelButton);
         snoozeButton = tripDialog.findViewById(R.id.SnoozeButton);
@@ -88,12 +110,12 @@ public class ShowAlertDialog extends AppCompatActivity {
                 notifyIntent.setClassName("com.ProjectITI.tripsproject","com.ProjectITI.tripsproject.ShowAlertDialog");
                 notifyIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-// Create the PendingIntent
                 PendingIntent notifyPendingIntent = PendingIntent.getActivity(
                         getApplicationContext(), notifyIntent.getIntExtra("request",0), notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
                 );
                 nb.setContentIntent(notifyPendingIntent);
                 notificationHelper.getManager().notify(getIntent().getIntExtra("request",0), nb.build());
+                tripDao.setWaitingTrip(getIntent().getStringExtra("key"));
                 finish();
             }
         });
@@ -104,6 +126,17 @@ public class ShowAlertDialog extends AppCompatActivity {
                 stopRing();
                 tripDao.DoneTrip(getIntent().getStringExtra("key"));
                 gotToMap(getIntent().getStringExtra("from"),getIntent().getStringExtra("to"));
+
+                if (repeat.equals("Repeat Weekly") || repeat.equals("Repeat Daily") || repeat.equals("Repeat Monthly")) {
+
+                    Trip new_trip = new Trip(name, startPoint, endPoint, time, startDate, "upcoming", type, repeat,false);
+                    addNewTrip_Reapet(repeat, new_trip, notes);
+                }
+                //One Way Trip, Round Trip
+                if (type.equals("Round Trip")) {
+                    Trip new_trip = new Trip(name, startPoint, endPoint, time, startDate, "upcoming", type, repeat,true);
+                    addNewTrip_RoundTrip(new_trip,notes);
+                }
                 finish();
             }
         });
@@ -187,5 +220,83 @@ public class ShowAlertDialog extends AppCompatActivity {
         Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    private void addNewTrip_RoundTrip(Trip trip, ArrayList<String> notes) {
+        String start = trip.getTo();
+        String end = trip.getFrom();
+        trip.setRepeat("No Repeat");
+        trip.setStatus("upcoming");
+        trip.setType("One Way Trip");
+        trip.setFrom(start);
+        trip.setTo(end);
+        trip.setWait(true);
+        trip.setName(trip.getName()+" - BACK");
+
+        TripDao tripDao = new TripDao();
+        tripDao.AddTrip(trip, notes, Calendar.getInstance());
+
+
+
+        /*
+        Intent intent = new Intent(context,showCalenderandTimepicker.class);
+        intent.putExtra("tripName", trip.getName());
+        intent.putExtra("endPoint", trip.getTo());
+        intent.putExtra("date", trip.getDate());
+        intent.putExtra("time", trip.getTime());
+        intent.putExtra("type", trip.getType());
+        intent.putExtra("repeat", trip.getRepeat());
+        intent.putExtra("startPoint", trip.getFrom());
+
+        intent.putStringArrayListExtra("notes", notes);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+*/
+    }
+
+
+    private void addNewTrip_Reapet(String repeat, Trip trip, ArrayList<String> notes) {
+        String newDate = "";
+        Date trip_date;
+        Calendar cal = Calendar.getInstance();
+
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            trip_date = df.parse(trip.getDate());
+            Log.i("tag", "new Date  : " + trip_date.toString());
+            cal.setTime(trip_date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (repeat.equals("Repeat Weekly")) {
+            cal.add(Calendar.WEEK_OF_YEAR,1);
+            int day = cal.get(Calendar.DAY_OF_MONTH);
+            int Month = cal.get(Calendar.MONTH) + 1;
+            int year = cal.get(Calendar.YEAR);
+            newDate = day + "/" + Month + "/" + year;
+            trip.setDate(newDate);
+
+        } else if (repeat.equals("Repeat Daily")) {
+
+            cal.add(Calendar.DAY_OF_MONTH,1);
+            int day = cal.get(Calendar.DAY_OF_MONTH);
+            int Month = cal.get(Calendar.MONTH) + 1;
+            int year = cal.get(Calendar.YEAR);
+            newDate = day + "/" + Month + "/" + year;
+            trip.setDate(newDate);
+
+        } else if (repeat.equals("Repeat Monthly")) {
+            cal.add(Calendar.MONTH,1);
+            int day = cal.get(Calendar.DAY_OF_MONTH);
+            int Month = cal.get(Calendar.MONTH) + 1;
+            int year = cal.get(Calendar.YEAR);
+            newDate = day + "/" + Month + "/" + year;
+            trip.setDate(newDate);
+        }
+        ArrayList<String> notes2 = new ArrayList<>();
+        TripDao tripDao = new TripDao();
+        tripDao.AddTrip(trip, notes,cal);
+
     }
 }

@@ -36,8 +36,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 
 
 public class UpdateTripData extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener ,updateTripContract.ViewInterface {
@@ -64,6 +67,7 @@ public class UpdateTripData extends AppCompatActivity implements TimePickerDialo
 
     String start = "";
     String end = "";
+    Calendar fullCalender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,6 +170,7 @@ public class UpdateTripData extends AppCompatActivity implements TimePickerDialo
     }
     private void setUpComponents()
     {
+        fullCalender = Calendar.getInstance();
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         tripName = findViewById(R.id.tripNameUpdated_Field);
@@ -230,7 +235,6 @@ public class UpdateTripData extends AppCompatActivity implements TimePickerDialo
         c.set(Calendar.SECOND, 0);
 
         updateTimeText(c);
-        startAlarm(c);
     }
 
     private void updateTimeText(Calendar c) {
@@ -240,19 +244,6 @@ public class UpdateTripData extends AppCompatActivity implements TimePickerDialo
         timeSelected.setText(timeText);
     }
 
-    private void startAlarm(Calendar c) {
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, AlertReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
-
-        if (c.before(Calendar.getInstance())) {
-            c.add(Calendar.DATE, 1);
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
-        }
-    }
 
     public void updateTripClick(View view) {
         updateTrip();
@@ -273,11 +264,24 @@ public class UpdateTripData extends AppCompatActivity implements TimePickerDialo
             String trip_type = type.getSelectedItem().toString();
             //Trip(String name, String from, String to, String time, String date, String status, String type, String repeat) {
             //public Trip(String id, String name, String from, String to, String time, String date, String status, String type, String repeat, ArrayList<String> notes) {
-            Trip trip = new Trip(trip_name, start, end, time, date, status, trip_type, trip_repeat);
-            updateTripPresenter.updateTrip(tripID, trip);
+            Trip trip = new Trip(trip_name, start, end, time, date, status, trip_type, trip_repeat,false);
+            updateTripPresenter.updateTrip(tripID, trip,convertDate(date,time));
             returnToMain();
         }
 
+    }
+    private Calendar convertDate(String date, String time) {
+        Date trip_date;
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy h:mm a");
+        try {
+            trip_date = df.parse(date + " " + time);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(trip_date);
+            return cal;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return Calendar.getInstance();
     }
 
     @Override
