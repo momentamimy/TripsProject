@@ -14,9 +14,8 @@ import androidx.annotation.NonNull;
 
 import com.ProjectITI.tripsproject.AlertReceiver;
 import com.ProjectITI.tripsproject.HomeScreen;
-import com.ProjectITI.tripsproject.ui.Trips_History.HistoryFragment;
+import com.ProjectITI.tripsproject.drawOnMap.MapFrag;
 import com.ProjectITI.tripsproject.ui.Trips_History.historyPresenter;
-import com.ProjectITI.tripsproject.ui.Upcoming_Trips.HomeFragment;
 import com.ProjectITI.tripsproject.ui.Upcoming_Trips.upcomingPresenter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -324,7 +323,7 @@ public class TripDao {
         mDatabase.child("Trips").child(userId).child(key).child("date").setValue(trip.getDate());
 
 
-        if (Calendar.getInstance().getTimeInMillis()<calendar.getTimeInMillis()) {
+        if (Calendar.getInstance().getTimeInMillis() < calendar.getTimeInMillis()) {
             mDatabase.child("Trips").child(userId).child(key).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -365,6 +364,37 @@ public class TripDao {
             }
         });
         return new ArrayList<>();
+    }
+
+    public void getDrawRoutes(final MapFrag fragment) {
+        DatabaseReference ref = mDatabase.child("Trips").child(userId);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    ArrayList<String> startPointsList = new ArrayList<>();
+                    ArrayList<String> endPointsList = new ArrayList<>();
+                    ArrayList<String> namesList = new ArrayList<>();
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        String status = ds.child("status").getValue(String.class);
+                        if (status!=null)
+                        if (status.equals("Cancel")||status.equals("Done")) {
+                            String from = ds.child("from").getValue(String.class);
+                            startPointsList.add(from);
+                            String to = ds.child("to").getValue(String.class);
+                            endPointsList.add(to);
+                            String name = ds.child("name").getValue(String.class);
+                            namesList.add(name);
+                        }
+                    }
+                fragment.drawRoates(startPointsList, endPointsList,namesList);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Code
+            }
+        });
     }
 
     public ArrayList<String> getStartPoints() {

@@ -5,12 +5,17 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Parcelable;
 import android.provider.Settings;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,7 +88,15 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public void onBindViewHolder(@NonNull final RecycleViewAdapter.ViewHolder holder, final int position) {
         if (values.get(position).isWait())
         {
-            holder.tripname.setText("Waiting :\n"+values.get(position).getName());
+            String text = "\nWaiting";
+            String text2 =  values.get(position).getName()+text;
+
+
+            Spannable spannable = new SpannableString(text2);
+
+            spannable.setSpan(new ForegroundColorSpan(getApplicationContext().getResources().getColor(R.color.colorPrimaryLight)), values.get(position).getName().length(), text2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            holder.tripname.setText(spannable, TextView.BufferType.SPANNABLE);
         }
         else
         {
@@ -99,12 +112,17 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         trip_notes = values.get(position).getNotes();
 
 
+        holder.spinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                PopupMenu popup = new PopupMenu(context, holder.spinner);
+                for (int i = 0; i < trip_notes.size(); i++) {
+                    popup.getMenu().add(Menu.NONE, 1, Menu.NONE, trip_notes.get(i));
+                }
+                popup.show();
 
-        ArrayAdapter aa = new ArrayAdapter(context, android.R.layout.simple_spinner_item, trip_notes);
-        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        holder.spinner.setSelected(false);
-        holder.spinner.setAdapter(aa);
-
+            }
+        });
         holder.buttonViewOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -383,7 +401,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         public TextView data;
         public TextView time;
         public ImageView img;
-        public Spinner spinner;
+        public TextView spinner;
         public Button start_trip;
         public TextView buttonViewOption;
         public CardView c;

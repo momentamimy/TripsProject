@@ -18,22 +18,24 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_single"
             android:visibility="visible">
 
             <TextView
                 android:id="@+id/history_trip_name"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
+                android:background="@drawable/login_edittext_style"
                 android:textColor="@color/colorPrimaryDark"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
+                android:layout_marginTop="10dp"
                 android:id="@+id/history_imageView_id"
                 android:layout_width="wrap_content"
                 android:layout_height="106dp"
@@ -65,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center|center_horizontal|fill_horizontal|end"
 
-            android:background="@color/backgroundMedium"
+            android:background="@color/backgroundWhite"
 
             android:visibility="gone">
 

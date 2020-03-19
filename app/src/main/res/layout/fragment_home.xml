@@ -29,13 +29,14 @@
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_marginBottom="16dp"
-            android:src="@drawable/icons8addlist64" />
+            android:src="@drawable/ic_no_trips" />
 
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:textColor="#2196F3"
             android:text="There are currently no Trips in your upcoming list."
             android:textAlignment="center"
             android:textSize="16sp"

@@ -70,13 +70,16 @@
 
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:gravity="center"
                     android:id="@+id/tripNameUpdated_Field"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:layout_marginStart="5dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="5dp"
                     android:ems="10"
                     android:hint="@string/Trip_Name"
+                    android:background="@drawable/login_edittext_style"
                     android:inputType="textPersonName"
                     android:theme="@style/TextPrimaryLabel"
                     app:layout_constraintEnd_toEndOf="parent"

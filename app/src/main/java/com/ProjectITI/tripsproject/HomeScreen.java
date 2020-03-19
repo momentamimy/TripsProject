@@ -3,11 +3,9 @@ package com.ProjectITI.tripsproject;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -28,9 +25,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.ProjectITI.tripsproject.AddTrip.AddTrip;
 import com.ProjectITI.tripsproject.Alert.Trip_alert;
-import com.ProjectITI.tripsproject.Model.Trip;
-import com.ProjectITI.tripsproject.Model.TripDao;
-import com.ProjectITI.tripsproject.drawOnMap.MapsActivity;
+import com.ProjectITI.tripsproject.drawOnMap.MapFrag;
 import com.ProjectITI.tripsproject.ui.Trips_History.HistoryFragment;
 import com.ProjectITI.tripsproject.ui.Upcoming_Trips.HomeFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -38,8 +33,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.ArrayList;
 
 public class HomeScreen extends AppCompatActivity {
 
@@ -110,6 +103,11 @@ public class HomeScreen extends AppCompatActivity {
                         transaction.commit();
                         break;
                     case R.id.drawOnMap:
+                        selectedFregment=new MapFrag() ;
+                        transaction.replace( R.id.nav_host_fragment, selectedFregment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                        /*
                         TripDao tripDao = new TripDao();
                         ArrayList<String> StartPoints = tripDao.getStartPoints();
                         Log.i("tag" , "StartPoints : "+StartPoints.size());
@@ -117,7 +115,7 @@ public class HomeScreen extends AppCompatActivity {
                         Log.i("tag" , "EndPoints : "+EndPoints.size());
                         Intent intent = new Intent(context, MapsActivity.class);
                         startActivity(intent);
-                        break;
+                        break;*/
                 }
                 drawer.closeDrawers();
                 return true;
