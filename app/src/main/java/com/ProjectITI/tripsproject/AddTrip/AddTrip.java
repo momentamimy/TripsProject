@@ -278,7 +278,7 @@ public class AddTrip extends AppCompatActivity implements addTripContract.ViewIn
 
 
     public void addTripClick(View view) {
-        if (tripNameEditText.getText().toString().isEmpty())
+        if (tripNameEditText.getText().toString().trim().isEmpty())
         {
             tripNameEditText.setError("fill trip name");
         }

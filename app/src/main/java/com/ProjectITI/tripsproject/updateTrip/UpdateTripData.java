@@ -233,7 +233,7 @@ public class UpdateTripData extends AppCompatActivity implements TimePickerDialo
 
     public void updateTrip() {
         Calendar fullCalender = convertDate(dateSelected.getText().toString(), timeSelected.getText().toString());
-        if (tripName.getText().toString().isEmpty()) {
+        if (tripName.getText().toString().trim().isEmpty()) {
             tripName.setError("fill trip name");
         } else if (start.equals("") || end.equals("")) {
             Toast.makeText(getApplicationContext(), "select start point and end point of the trip", Toast.LENGTH_LONG).show();
