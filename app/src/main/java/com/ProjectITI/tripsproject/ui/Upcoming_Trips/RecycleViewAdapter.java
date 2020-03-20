@@ -54,6 +54,7 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 import static androidx.core.app.ActivityCompat.startActivityForResult;
+import static com.ProjectITI.tripsproject.ShowAlertDialog.floatingIntent;
 import static com.ProjectITI.tripsproject.ui.Upcoming_Trips.HomeFragment.DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -206,10 +207,14 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 tripDao2.DoneTrip(tripId);
 
                 TripDao tr = new TripDao();
-                Intent newIntent = new Intent(context,FloatingWidgetService.class);
+                if (floatingIntent != null)
+                {
+                    context.stopService(floatingIntent);
+                }
+                floatingIntent = new Intent(context, FloatingWidgetService.class);
                 //newIntent.putExtra("position", values.get(position).getId());
-                newIntent.putStringArrayListExtra("notes", values.get(trip_position).getNotes());
-                context.startService(newIntent);
+                floatingIntent.putStringArrayListExtra("notes", notes);
+                context.startService(floatingIntent);
 
                 //((Activity)context).finish();
 

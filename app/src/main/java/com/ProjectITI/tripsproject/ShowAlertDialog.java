@@ -48,6 +48,7 @@ public class ShowAlertDialog extends AppCompatActivity {
     String key,repeat,name ,startPoint,endPoint,startDate,time,type;
     ArrayList<String> notes;
 
+    public static Intent floatingIntent = null;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,10 +139,14 @@ public class ShowAlertDialog extends AppCompatActivity {
                     Trip new_trip = new Trip(name, startPoint, endPoint, time, startDate, "upcoming", type, repeat,true);
                     addNewTrip_RoundTrip(new_trip,notes);
                 }
-                Intent newIntent = new Intent(context, FloatingWidgetService.class);
+                if (floatingIntent != null)
+                {
+                    context.stopService(floatingIntent);
+                }
+                floatingIntent = new Intent(context, FloatingWidgetService.class);
                 //newIntent.putExtra("position", values.get(position).getId());
-                newIntent.putStringArrayListExtra("notes", notes);
-                context.startService(newIntent);
+                floatingIntent.putStringArrayListExtra("notes", notes);
+                context.startService(floatingIntent);
                 finish();
             }
         });

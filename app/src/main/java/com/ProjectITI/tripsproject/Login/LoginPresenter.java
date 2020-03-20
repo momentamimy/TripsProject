@@ -116,6 +116,7 @@ public class LoginPresenter implements LoginContract.PresenterInterface {
                             databaseReference.child("users").child(user.getUid()).child("Email").setValue(user.getEmail());
                             databaseReference.child("users").child(user.getUid()).child("Password").setValue("Gmail");
                             databaseReference.child("users").child(user.getUid()).child("UserName").setValue(user.getDisplayName());
+                            databaseReference.child("users").child(user.getUid()).child("TripsCount").setValue(0);
 
                             viewInterface.LoginSucceed(user.getEmail(), "", user.getDisplayName());
                         } else {
@@ -145,6 +146,7 @@ public class LoginPresenter implements LoginContract.PresenterInterface {
                             databaseReference.child("users").child(user.getUid()).child("Email").setValue(user.getEmail());
                             databaseReference.child("users").child(user.getUid()).child("Password").setValue("Facebook");
                             databaseReference.child("users").child(user.getUid()).child("UserName").setValue(user.getDisplayName());
+                            databaseReference.child("users").child(user.getUid()).child("TripsCount").setValue(0);
 
                             viewInterface.LoginSucceed(user.getEmail(), "", user.getDisplayName());
                         } else {
