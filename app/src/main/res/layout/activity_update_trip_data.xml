@@ -71,7 +71,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
                 <EditText
-                    android:maxLength="20"
+                    android:maxLength="50"
                     android:gravity="center"
                     android:id="@+id/tripNameUpdated_Field"
                     android:layout_width="match_parent"
@@ -85,7 +85,6 @@
                     android:background="@drawable/login_edittext_style"
                     android:theme="@style/TextPrimaryLabel"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/textView"
                     app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -97,7 +96,7 @@
                     android:layout_marginTop="10dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/endPoint_fragment"
-                    app:srcCompat="@drawable/calendar_icon" />
+                    android:src="@drawable/calendar_icon" />
 
                 <ImageView
                     android:id="@+id/time_Picker"
@@ -107,7 +106,7 @@
                     android:layout_marginEnd="44dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/endPoint_fragment"
-                    app:srcCompat="@drawable/clock_icon" />
+                    android:src="@drawable/clock_icon" />
 
                 <Button
                     android:id="@+id/Update_Trip_Btn"

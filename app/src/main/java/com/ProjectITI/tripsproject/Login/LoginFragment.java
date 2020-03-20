@@ -27,6 +27,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -150,6 +151,7 @@ public class LoginFragment extends Fragment implements LoginContract.ViewInterfa
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d("looooooooooooog", "facebook:onSuccess:" + loginResult.getAccessToken());
+                LoginManager.getInstance().logOut();
                 presenterInterface.handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
