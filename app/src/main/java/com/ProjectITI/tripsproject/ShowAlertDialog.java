@@ -30,6 +30,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.ProjectITI.tripsproject.Model.Trip;
 import com.ProjectITI.tripsproject.Model.TripDao;
+import com.ProjectITI.tripsproject.ui.Upcoming_Trips.FloatingWidgetService;
 import com.appolica.flubber.Flubber;
 
 import java.text.ParseException;
@@ -137,6 +138,10 @@ public class ShowAlertDialog extends AppCompatActivity {
                     Trip new_trip = new Trip(name, startPoint, endPoint, time, startDate, "upcoming", type, repeat,true);
                     addNewTrip_RoundTrip(new_trip,notes);
                 }
+                Intent newIntent = new Intent(context, FloatingWidgetService.class);
+                //newIntent.putExtra("position", values.get(position).getId());
+                newIntent.putStringArrayListExtra("notes", notes);
+                context.startService(newIntent);
                 finish();
             }
         });

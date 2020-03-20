@@ -122,7 +122,7 @@ public class LoginFragment extends Fragment implements LoginContract.ViewInterfa
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (EmailEditText.getText().toString().isEmpty())
+                if (EmailEditText.getText().toString().trim().isEmpty())
                 {
                     EmailInputLayout.setError("fill Email");
                 }

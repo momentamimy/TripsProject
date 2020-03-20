@@ -28,6 +28,7 @@
                         android:theme="@style/TextPrimaryLabel">
 
                         <EditText
+                            android:maxLength="20"
                             android:id="@+id/UserName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -49,6 +50,7 @@
                         android:theme="@style/TextPrimaryLabel">
 
                         <EditText
+                            android:maxLength="20"
                             android:id="@+id/Email"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -73,6 +75,7 @@
                         app:passwordToggleTint="@color/colorPrimary">
 
                         <EditText
+                            android:maxLength="20"
                             android:id="@+id/Password"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -97,6 +100,7 @@
                         app:passwordToggleTint="@color/colorPrimary">
 
                         <EditText
+                            android:maxLength="20"
                             android:id="@+id/PasswordConfirm"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

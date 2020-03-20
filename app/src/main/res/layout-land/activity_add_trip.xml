@@ -70,6 +70,7 @@
 
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:maxLength="20"
                     android:gravity="center"
                     android:id="@+id/tripNameUpdated_Field"
                     android:layout_width="match_parent"

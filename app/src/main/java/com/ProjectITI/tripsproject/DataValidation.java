@@ -9,7 +9,7 @@ public class DataValidation {
         boolean isEmpty = true;
         String validationString = null;
 
-        if (inputTextField.getText().length()==0) {
+        if (inputTextField.getText().toString().trim().length()==0) {
             isEmpty = false;
             validationString = validationText;
         }
