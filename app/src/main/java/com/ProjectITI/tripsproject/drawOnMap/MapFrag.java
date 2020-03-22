@@ -104,7 +104,11 @@ public class MapFrag extends Fragment implements OnMapReadyCallback {
                 mMap.addMarker(new MarkerOptions().position(Loc2).title("End Point").snippet(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                 j++;
             }
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Loc1, 10f));
+            if(Loc1!=null)
+            {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Loc1, 10f));
+            }
+
 
         } catch (IOException e) {
             // handle the exception

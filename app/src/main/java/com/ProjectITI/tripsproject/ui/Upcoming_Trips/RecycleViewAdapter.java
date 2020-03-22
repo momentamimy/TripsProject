@@ -62,7 +62,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
   //  private upcomingContract.PresenterInterface upcomingPresenter = new upcomingPresenter(this);
     private final Context context;
     private List<Trip> values;
-    List<String> trip_notes = new ArrayList<>();
     private Trip trip;
 
     showNotesAdapter adapter;
@@ -109,13 +108,14 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         holder.data.setText(values.get(position).getDate());
         holder.time.setText(values.get(position).getTime());
 
-        trip_notes = new ArrayList<>();
-        trip_notes = values.get(position).getNotes();
+
 
 
         holder.spinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
+                List<String> trip_notes;
+                trip_notes = values.get(position).getNotes();
                 PopupMenu popup = new PopupMenu(context, holder.spinner);
                 for (int i = 0; i < trip_notes.size(); i++) {
                     popup.getMenu().add(Menu.NONE, 1, Menu.NONE, trip_notes.get(i));
@@ -174,7 +174,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         holder.start_trip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                boolean add2request = false;
                 TripDao tripDao  = new TripDao();
 
                 int trip_position = position;
@@ -196,11 +196,13 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
                     Trip new_trip = new Trip(name, startPoint, endPoint, time, startDate, "upcoming", type, repeat,false);
                     addNewTrip_Reapet(repeat, new_trip, notes);
+                    add2request = true;
                 }
                 //One Way Trip, Round Trip
                 if (type.equals("Round Trip")) {
+
                     Trip new_trip = new Trip(name, startPoint, endPoint, time, startDate, "upcoming", type, repeat,true);
-                    addNewTrip_RoundTrip(new_trip,notes);
+                    addNewTrip_RoundTrip(new_trip,notes,add2request);
                 }
                 String tripId = values.get(trip_position).getId();
                 TripDao tripDao2 = new TripDao();
@@ -225,7 +227,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         });
     }
 
-    private void addNewTrip_RoundTrip(Trip trip, ArrayList<String> notes) {
+    private void addNewTrip_RoundTrip(Trip trip, ArrayList<String> notes,boolean add) {
         String start = trip.getTo();
         String end = trip.getFrom();
         trip.setRepeat("No Repeat");
@@ -236,7 +238,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         trip.setWait(true);
         trip.setName(trip.getName()+" - BACK");
         TripDao tripDao = new TripDao();
-        tripDao.AddTrip(trip, notes,null);
+        tripDao.AddTrip(trip, notes,null,add);
 
 
 
@@ -345,7 +347,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         // Trip trip = trip_name, start, end, time, date, status, trip_type, trip_repeat);
         ArrayList<String> notes2 = new ArrayList<>();
         TripDao tripDao = new TripDao();
-        tripDao.AddTrip(trip, notes,cal);
+        tripDao.AddTrip(trip, notes,cal,false);
         // upcomingPresenter.getAllData();
 
     }

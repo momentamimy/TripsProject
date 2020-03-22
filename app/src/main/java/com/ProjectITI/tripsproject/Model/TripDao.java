@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 
 import com.ProjectITI.tripsproject.AlertReceiver;
 import com.ProjectITI.tripsproject.HomeScreen;
+import com.ProjectITI.tripsproject.ShowAlertDialog;
 import com.ProjectITI.tripsproject.drawOnMap.MapFrag;
 import com.ProjectITI.tripsproject.ui.Trips_History.historyPresenter;
 import com.ProjectITI.tripsproject.ui.Upcoming_Trips.upcomingPresenter;
@@ -50,7 +51,7 @@ public class TripDao {
     final List<Trip> UpcomingData = new ArrayList<>();
     Boolean flag = false;
 
-    public void AddTrip(final Trip trip, ArrayList<String> notes, final Calendar calendar) {
+    public void AddTrip(final Trip trip, ArrayList<String> notes, final Calendar calendar, final boolean add2request) {
         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         final String key = mDatabase.child("Trips").child(userId).push().getKey();
         Log.i("tag", " key : " + key);
@@ -78,6 +79,8 @@ public class TripDao {
                 if (!trip.isWait()) {
                     startAlarm(trip, calendar, key, request);
                 }
+                if (add2request)
+                    request++;
                 mDatabase.child("Trips").child(userId).child(key).child("alarm request").setValue(request);
 
                 request++;
@@ -327,9 +330,12 @@ public class TripDao {
             mDatabase.child("Trips").child(userId).child(key).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    int request = dataSnapshot.child("alarm request").getValue(Integer.class);
-                    startAlarm(trip, calendar, key, request);
-                    mDatabase.child("Trips").child(userId).child(key).child("wait").setValue(false);
+                    if (dataSnapshot.exists())
+                    {
+                        int request = dataSnapshot.child("alarm request").getValue(Integer.class);
+                        startAlarm(trip, calendar, key, request);
+                        mDatabase.child("Trips").child(userId).child(key).child("wait").setValue(false);
+                    }
                 }
 
                 @Override
@@ -349,13 +355,32 @@ public class TripDao {
 
     }
 
-    public ArrayList<String> getTripNotes(String tripId) {
+    public void getTripNotes(String tripId, final ShowAlertDialog activity) {
         final List<String> Notes = new ArrayList<>();
-        DatabaseReference newsRef = mDatabase.child("Notes").child(tripId);
+        DatabaseReference newsRef = FirebaseDatabase.getInstance().getReference()
+                .child("Trips").child(userId).child(tripId).child("Notes");
         newsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                Map<String, String> td;
+                ArrayList<String> map;
+                try {
+                    td = (HashMap<String, String>) dataSnapshot.getValue();
+                    map = new ArrayList<>(td.values());
+                } catch (Exception e) {
+                    td = new HashMap<>();
+                    map = new ArrayList<>();
+                }
+                if (map != null)
+                    for (int i = 0; i < map.size(); i++) {
+                        if (map.get(i) == null) {
+                            map.remove(i);
+                        }
+                    }
+                else {
+                    map = new ArrayList<>();
+                }
+                activity.fillNotes(map);
             }
 
             @Override
@@ -363,7 +388,6 @@ public class TripDao {
                 Log.i("tag", databaseError.getMessage());
             }
         });
-        return new ArrayList<>();
     }
 
     public void getDrawRoutes(final MapFrag fragment) {
@@ -371,23 +395,25 @@ public class TripDao {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                if (dataSnapshot.exists()) {
                     ArrayList<String> startPointsList = new ArrayList<>();
                     ArrayList<String> endPointsList = new ArrayList<>();
                     ArrayList<String> namesList = new ArrayList<>();
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         String status = ds.child("status").getValue(String.class);
-                        if (status!=null)
-                        if (status.equals("Cancel")||status.equals("Done")) {
-                            String from = ds.child("from").getValue(String.class);
-                            startPointsList.add(from);
-                            String to = ds.child("to").getValue(String.class);
-                            endPointsList.add(to);
-                            String name = ds.child("name").getValue(String.class);
-                            namesList.add(name);
-                        }
+                        if (status != null)
+                            if (status.equals("Cancel") || status.equals("Done")) {
+                                String from = ds.child("from").getValue(String.class);
+                                startPointsList.add(from);
+                                String to = ds.child("to").getValue(String.class);
+                                endPointsList.add(to);
+                                String name = ds.child("name").getValue(String.class);
+                                namesList.add(name);
+                            }
                     }
-                fragment.drawRoates(startPointsList, endPointsList,namesList);
+                    fragment.drawRoates(startPointsList, endPointsList, namesList);
+
+                }
             }
 
             @Override

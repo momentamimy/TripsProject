@@ -185,7 +185,7 @@ public class LoginFragment extends Fragment implements LoginContract.ViewInterfa
         TripDao tripDao = new TripDao();
         tripDao.setActivity(getActivity());
         tripDao.startAllAlarm();
-        Toast.makeText(getContext(),userName,Toast.LENGTH_LONG).show();
+        //Toast.makeText(getContext(),userName,Toast.LENGTH_LONG).show();
         SharedPreferences.Editor editor = getActivity().getSharedPreferences("USER", MODE_PRIVATE).edit();
         editor.putString("name", userName);
         editor.commit();
