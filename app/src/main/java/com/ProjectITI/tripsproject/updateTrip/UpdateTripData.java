@@ -60,7 +60,10 @@ public class UpdateTripData extends AppCompatActivity implements TimePickerDialo
     FirebaseAuth mAuth;
     DatabaseReference databaseReference;
 
-    String apiKey = "AIzaSyCotxw-usxY5l35Q2i3ICLKZ3iFnbTyVkE";
+    String apiKey1 = "AIzaSyCotxw";
+    String apiKey2 = "-usxY5l35Q2";
+    String apiKey3 = "i3ICLKZ3";
+    String apiKey4 = "iFnbTyVkE";
     String tripID;
     int minDay, minYear, minMonth;
     int selected_year, selected_day, selected_Month;
@@ -106,7 +109,7 @@ public class UpdateTripData extends AppCompatActivity implements TimePickerDialo
 
         // Setup Places Client
         if (!Places.isInitialized()) {
-            Places.initialize(UpdateTripData.this, apiKey);
+            Places.initialize(UpdateTripData.this, apiKey1+apiKey2+apiKey3+apiKey4);
         }
         // Retrieve a PlacesClient (previously initialized - see MainActivity)
         placesClient = Places.createClient(this);

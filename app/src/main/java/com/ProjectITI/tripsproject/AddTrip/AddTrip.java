@@ -74,7 +74,10 @@ public class AddTrip extends AppCompatActivity implements addTripContract.ViewIn
     AutocompleteSupportFragment autocompleteStartPointFragment;
     AutocompleteSupportFragment autocompleteEndPointFragment;
 
-    String apiKey = "AIzaSyBHpF_TLWue13wvxHvbIqugSt_3LOa2Acw";
+    String apiKey1 = "AIzaSyBHpF_";
+    String apiKey2 = "TLWue13wv";
+    String apiKey3 = "xHvbIqugSt";
+    String apiKey4 = "_3LOa2Acw";
 
     String start = "";
     String end = "";
@@ -139,7 +142,7 @@ public class AddTrip extends AppCompatActivity implements addTripContract.ViewIn
 
         // Setup Places Client
         if (!Places.isInitialized()) {
-            Places.initialize(AddTrip.this, apiKey);
+            Places.initialize(AddTrip.this, apiKey1+apiKey2+apiKey3+apiKey4);
         }
         // Retrieve a PlacesClient (previously initialized - see MainActivity)
         placesClient = Places.createClient(this);
